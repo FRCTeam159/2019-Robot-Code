@@ -7,16 +7,23 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotMap;
+import frc.robot.OI;
 
 /**
  * An example command.  You can replace me with your own command.
  */
-public class ExampleCommand extends Command {
-  public ExampleCommand() {
+public class DriveWithGamepad extends Command implements RobotMap{
+  double powerScale = 2.0;
+  double turnScale = 0.65;
+  double moveExponent = 1;
+  double turnExponent = 1;
+  public DriveWithGamepad() {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.m_subsystem);
+    requires(Robot.m_drivetrain);
   }
 
   // Called just before this Command runs the first time
@@ -27,6 +34,21 @@ public class ExampleCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Joystick stick = OI.driverController;
+    double moveAxis = -powerScale * stick.getRawAxis(RobotMap.LEFT_JOYSTICK); // left stick - drive
+        double turnAxis = powerScale * stick.getRawAxis(RobotMap.RIGHT_JOYSTICK); // right stick - rotate
+    double moveValue = 0;
+        double turnValue = 0;
+        
+        if(Math.abs(moveAxis) > 0) {
+        	moveValue = (moveAxis / Math.abs(moveAxis)) * Math.pow(Math.abs(moveAxis), moveExponent);
+        }
+        if(Math.abs(turnAxis) > 0) {
+        	turnValue = (turnAxis / Math.abs(turnAxis)) * Math.pow(Math.abs(turnAxis), turnExponent); // Math.abs the turnValue
+        }
+        
+		turnValue *= Math.abs(moveValue)*(1-turnScale)+turnScale;
+        Robot.m_drivetrain.arcadeDrive(moveValue, turnValue);
   }
 
   // Make this return true when this Command no longer needs to run execute()
