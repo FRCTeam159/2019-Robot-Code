@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
+import frc.robot.commands.DriveWithGamepad;
 import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -36,7 +37,7 @@ public class DriveTrain extends Subsystem implements MotorSafety, RobotMap{
   }
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+     setDefaultCommand(new DriveWithGamepad());
   }
   public void arcadeDrive(double moveValue, double turnValue) {
 		double leftMotorOutput;
