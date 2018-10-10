@@ -19,13 +19,14 @@ import frc.robot.OI;
 public class DriveWithGamepad extends Command implements RobotMap{
   double powerScale = 2.0;
   double turnScale = 0.65;
-  double moveExponent = 1;
-  double turnExponent = 1;
+  double moveExponent = 0.5; // Raise moveExponent and turnExponent for more control at lower speeds,
+  double turnExponent = 0.5; // and lower them for more control at higher speeds.
   double xMinT = 0.18;
   double xMinO = 0;
   double zMinT = 0.035;
   double zMinO = 0;
   boolean useDeadband = true;
+  boolean Debug = false;
   public DriveWithGamepad() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.m_drivetrain);
@@ -48,13 +49,14 @@ public class DriveWithGamepad extends Command implements RobotMap{
        z = quadDeadband(zMinT, zMinO, zs);
        x = quadDeadband(xMinT, xMinO, xs);
     }
-    double moveAxis = -powerScale * z; // left stick - drive
+    double moveAxis = powerScale * z; // left stick - drive
     double turnAxis = powerScale * x; // right stick - rotate
     double moveValue = 0;
     double turnValue = 0;
-    System.out.println("xs = " + xs + " x = " + x);
-    System.out.println("zs = " + zs + " z = " + z);
-
+    if (Debug) {
+      System.out.println("xs = " + xs + " x = " + x);
+      System.out.println("zs = " + zs + " z = " + z);
+    }
     if (Math.abs(moveAxis) > 0.0) {
       moveValue = (moveAxis / Math.abs(moveAxis)) * Math.pow(Math.abs(moveAxis), moveExponent);
     }
