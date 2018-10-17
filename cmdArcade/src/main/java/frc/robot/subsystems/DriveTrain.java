@@ -30,9 +30,9 @@ public class DriveTrain extends Subsystem implements MotorSafety, RobotMap{
 	private WPI_TalonSRX frontRight;
 	private WPI_TalonSRX backLeft;
 	private WPI_TalonSRX backRight;
-//	constants for the encoders on pancake
+//	Constants for the encoders on pancake.
 	private static final double WHEEL_DIAMETER = 4.25; //in
-	private static final double GEAR_RATIO = (22/38); //.578
+	private static final double GEAR_RATIO = (3.0 * 38/22); 
 	private static final double ENCODER_TICKS = 900;
 	private static final double ENCODER_EDGES = 4;
 	private static final double TICKS_PER_REVOLUTION = GEAR_RATIO * ENCODER_TICKS * ENCODER_EDGES;
@@ -52,6 +52,10 @@ public class DriveTrain extends Subsystem implements MotorSafety, RobotMap{
 		reset();
 		
   }
+  public void disable() {
+	frontRight.disable();
+	backLeft.disable();
+}
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
      setDefaultCommand(new DriveWithGamepad());
@@ -143,8 +147,7 @@ public void setRaw(double left, double right) {
 		frontRight.setStatusFramePeriod(com.ctre.phoenix.motorcontrol.StatusFrameEnhanced.Status_3_Quadrature, RobotMap.ENCODER_STATUS_FRAME_PERIOD, RobotMap.TIMEOUT);
 		backLeft.setStatusFramePeriod(com.ctre.phoenix.motorcontrol.StatusFrameEnhanced.Status_3_Quadrature, RobotMap.ENCODER_STATUS_FRAME_PERIOD, RobotMap.TIMEOUT);
 
-		backLeft.getSensorCollection().setQuadraturePosition(0, RobotMap.ENCODER_TIMEOUT);
-		frontRight.getSensorCollection().setQuadraturePosition(0, RobotMap.ENCODER_TIMEOUT);
+		resetEncoders();
 
 		log();
 	}

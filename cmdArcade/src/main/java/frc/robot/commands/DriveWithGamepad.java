@@ -26,7 +26,7 @@ public class DriveWithGamepad extends Command implements RobotMap{
   double zMinT = 0.035;
   double zMinO = 0;
   boolean useDeadband = true;
-  boolean Debug = false;
+  boolean Debug = true;
   public DriveWithGamepad() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.m_drivetrain);
