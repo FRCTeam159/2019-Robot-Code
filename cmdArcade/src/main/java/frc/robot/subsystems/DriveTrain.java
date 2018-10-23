@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 import frc.robot.commands.DriveWithGamepad;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 
@@ -38,6 +39,7 @@ public class DriveTrain extends Subsystem implements MotorSafety, RobotMap{
 	private static final double TICKS_PER_REVOLUTION = GEAR_RATIO * ENCODER_TICKS * ENCODER_EDGES;
 	private static final double FEET_PER_REV = Math.PI * WHEEL_DIAMETER / 12.0;
 	private static final double TICKS_PER_FOOT = TICKS_PER_REVOLUTION / FEET_PER_REV;
+	private ADXRS450_Gyro gyro;
 	
 	
 
@@ -49,6 +51,7 @@ public class DriveTrain extends Subsystem implements MotorSafety, RobotMap{
 		frontRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TIMEOUT);
 		backLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TIMEOUT);
 		System.out.println("Ticks Per Foot: " + TICKS_PER_FOOT);
+		gyro = new ADXRS450_Gyro();
 		reset();
 		
   }
@@ -146,7 +149,7 @@ public void setRaw(double left, double right) {
 	public void reset() {
 		frontRight.setStatusFramePeriod(com.ctre.phoenix.motorcontrol.StatusFrameEnhanced.Status_3_Quadrature, RobotMap.ENCODER_STATUS_FRAME_PERIOD, RobotMap.TIMEOUT);
 		backLeft.setStatusFramePeriod(com.ctre.phoenix.motorcontrol.StatusFrameEnhanced.Status_3_Quadrature, RobotMap.ENCODER_STATUS_FRAME_PERIOD, RobotMap.TIMEOUT);
-
+		gyro.reset();
 		resetEncoders();
 
 		log();
@@ -181,7 +184,7 @@ public void setRaw(double left, double right) {
 		return (frontRight.getSensorCollection().getQuadratureVelocity() * 10) / TICKS_PER_FOOT;
 	}
 	private void log() {
-		//SmartDashboard.putNumber("Heading", getHeading());
+		SmartDashboard.putNumber("Heading", getHeading());
 		SmartDashboard.putNumber("Left wheels", -backLeft.getSensorCollection().getQuadraturePosition());
 		SmartDashboard.putNumber("Right wheels", frontRight.getSensorCollection().getQuadraturePosition());
 		SmartDashboard.putNumber("Left distance", getLeftDistance());
@@ -189,5 +192,8 @@ public void setRaw(double left, double right) {
 		SmartDashboard.putNumber("Velocity", getVelocity());
 		SmartDashboard.putNumber("Distance", getDistance());
 		//SmartDashboard.putBoolean("Low Gear", inLowGear());
+	}
+	public double getHeading() {
+		return gyro.getAngle();
 	}
 }
