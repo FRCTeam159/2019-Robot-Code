@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import frc.robot.PhysicalConstants;
 import frc.robot.RobotMap;
@@ -25,8 +24,6 @@ import jaci.pathfinder.modifiers.TankModifier;
 
 public class DrivePath extends Command implements PhysicalConstants, RobotMap {
 
-    private static final boolean forcedStraight = false;
-
     private static final double TIME_STEP = 0.02;
     private static final double wheelbase = inchesToMeters(26);
     private Trajectory trajectory;
@@ -42,26 +39,10 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
     // private static int plotId = 0;
     private int pathIndex = 0;
 
-    private static final int SWITCH = 0;
-    private static final int SCALE = 1;
-    private static final int NONE = 2;
-
-    private static final int LEFT = 0;
-    private static final int RIGHT = 1;
-
-    private int targetObject = SCALE;
-    private int targetSide = LEFT;
-
-    private String whichObject[] = { "Switch", "Scale", "Straight" };
-    private String whichSide[] = { "Left", "Right" };
-    private String whichPosition[] = { "Left", "Center", "Right", "ILLEGAL" };
-
     private Timer timer = new Timer();
     private Timer pushTimer = new Timer();
     private boolean pushing = false;
-    private boolean followersFinished = false;
     private final double runtime;
-    private double pushTime = 2;
 
     double last_heading = 0;
 
@@ -74,13 +55,16 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
     // TODO use non deprecated class (edu.wpi.first.networktables.NetworkTable)
     private static NetworkTable table = NetworkTable.getTable("datatable");
 
-    private String targetString = whichSide[targetSide] + " " + whichObject[targetObject];
+    public static boolean useGyro = false;
 
-    public static boolean useGyro;
+    private double distance;
+    private double offSet;
 
-    public DrivePath() {
+    public DrivePath(double d, double y) {
         requires(Robot.m_drivetrain);
 
+        distance = feetToMeters(d);
+        offSet = feetToMeters(y);
         timer.start();
         timer.reset();
 
@@ -96,7 +80,7 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
         timer.start();
         timer.reset();
 
-        trajectory = calculateTrajectory(MAX_VEL, MAX_ACC, MAX_JRK);
+        trajectory = calculateTrajectory(distance, offSet, MAX_VEL, MAX_ACC, MAX_JRK);
 
         if (trajectory == null) {
             SmartDashboard.putString("Target", "ERROR");
@@ -268,12 +252,12 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
         return newWaypoints;
     }
 
-    private Trajectory calculateTrajectory(double maxVelocity,
+    private Trajectory calculateTrajectory(double d, double y, double maxVelocity,
             double maxAcceleration, double maxJerk) {
         Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC,
                 Trajectory.Config.SAMPLES_FAST, TIME_STEP, maxVelocity, maxAcceleration, maxJerk);
 
-        Waypoint[] waypoints = calculatePathWaypoints();
+        Waypoint[] waypoints = calculatePathWaypoints(d, y);
         if (waypoints == null) {
             return null;
         }
@@ -290,26 +274,13 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
         return calculatedTrajectory;
     }
 
-    private Waypoint[] calculatePathWaypoints() {
-        Waypoint[] returnWaypoints = calculateStraightPoints(2.0);
+    private Waypoint[] calculatePathWaypoints(double d, double y) {
+        Waypoint[] returnWaypoints = null;
+        if (y == 0.0)
+            returnWaypoints = calculateStraightPoints(d);
+        else 
+            returnWaypoints = calculateHookpoints(d, y);
         return returnWaypoints;
-    }
-
-    private boolean isStraightPathForced() {
-        return forcedStraight;
-    }
-
-    private String generateFMSData() {
-        Random random = new Random();
-        StringBuilder data = new StringBuilder();
-        while (data.length() < 3) {
-            if (random.nextInt(2) == 0) {
-                data.append("R");
-            } else {
-                data.append("L");
-            }
-        }
-        return data.toString();
     }
 
     private static double inchesToMeters(double inches) {
@@ -339,9 +310,6 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
         return 2.54 * 12 * feet / 100;
     }
 
-    private void putFMSDataOnDashboard(String data) {
-        SmartDashboard.putString("FMS Data", data);
-    }
     //
     // private double getNumberOnDashboard(String name, double defaultValue) {
     // return SmartDashboard.getNumber(name, defaultValue);
@@ -357,6 +325,10 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
 
     private Waypoint[] calculateStraightPoints(double x) {
         return new Waypoint[] { new Waypoint(0, 0, 0), new Waypoint(x, 0, 0) };
+    }
+
+    private Waypoint[] calculateHookpoints(double x, double y){
+            return new Waypoint[]{new Waypoint (0, 0, 0), new Waypoint(x, y, Pathfinder.d2r(90))};
     }
 
     private void addPlotData() {

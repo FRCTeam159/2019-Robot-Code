@@ -104,7 +104,7 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 	@Override
 	public void pidWrite(double output) {
 		if (started) {
-			Robot.m_drivetrain.setRaw(-output, -output);
+			Robot.m_drivetrain.setRaw(output, output);
 		}
 	}
 	

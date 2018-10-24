@@ -41,7 +41,7 @@ public class DriveWithGamepad extends Command implements RobotMap{
   @Override
   protected void execute() {
     Joystick stick = OI.driverController;
-    double zs=stick.getRawAxis(RobotMap.LEFT_JOYSTICK);
+    double zs=-stick.getRawAxis(RobotMap.LEFT_JOYSTICK);
     double xs=stick.getRawAxis(RobotMap.RIGHT_JOYSTICK);
     double z = zs;
     double x = xs;
