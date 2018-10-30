@@ -94,6 +94,7 @@ public class DriveTrain extends Subsystem implements MotorSafety, RobotMap{
 		 */
 //		lastMoveValue = moveValue;
 		setRaw(leftMotorOutput, rightMotorOutput);
+		//setRaw(0, rightMotorOutput);
   }
   private static double coerce(double min, double max, double value) {
     return Math.max(min, Math.min(value, max));
@@ -165,11 +166,11 @@ public void setRaw(double left, double right) {
 	}
 
 	public double getRightDistance() {
-		return frontRight.getSensorCollection().getQuadraturePosition() / TICKS_PER_FOOT;
+		return -frontRight.getSensorCollection().getQuadraturePosition() / TICKS_PER_FOOT;
 	}
 
 	public double getLeftDistance() {
-		return -backLeft.getSensorCollection().getQuadraturePosition() / TICKS_PER_FOOT;
+		return backLeft.getSensorCollection().getQuadraturePosition() / TICKS_PER_FOOT;
 	}
 
 	public double getVelocity() {
@@ -185,8 +186,8 @@ public void setRaw(double left, double right) {
 	}
 	private void log() {
 		SmartDashboard.putNumber("Heading", getHeading());
-		SmartDashboard.putNumber("Left wheels", -backLeft.getSensorCollection().getQuadraturePosition());
-		SmartDashboard.putNumber("Right wheels", frontRight.getSensorCollection().getQuadraturePosition());
+		SmartDashboard.putNumber("Left wheels", backLeft.getSensorCollection().getQuadraturePosition());
+		SmartDashboard.putNumber("Right wheels", -frontRight.getSensorCollection().getQuadraturePosition());
 		SmartDashboard.putNumber("Left distance", getLeftDistance());
 		SmartDashboard.putNumber("Right distance", getRightDistance());
 		SmartDashboard.putNumber("Velocity", getVelocity());
