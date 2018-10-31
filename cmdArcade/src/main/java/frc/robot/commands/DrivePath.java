@@ -158,8 +158,8 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
         double leftDistance = feetToMeters(Robot.m_drivetrain.getLeftDistance());
         double rightDistance = feetToMeters(Robot.m_drivetrain.getRightDistance());
 
-        double rightPower = leftFollower.calculate(leftDistance);
-        double leftPower = rightFollower.calculate(rightDistance);
+        double leftPower = leftFollower.calculate(leftDistance);
+        double rightPower = rightFollower.calculate(rightDistance);
 
         double turn = 0;
 
