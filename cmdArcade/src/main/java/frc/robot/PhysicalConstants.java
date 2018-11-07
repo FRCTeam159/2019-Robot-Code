@@ -1,6 +1,6 @@
 package frc.robot;
 
-public interface PhysicalConstants {
+public class PhysicalConstants {
     double ROBOT_WIDTH = 34.25;
     double ROBOT_LENGTH = 38.5;
 

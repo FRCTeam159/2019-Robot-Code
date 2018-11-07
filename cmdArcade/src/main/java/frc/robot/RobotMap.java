@@ -14,21 +14,26 @@ package frc.robot;
  * floating around.
  */
 public interface RobotMap {
-  //  Motor IDs
+  // Motor IDs
   public static final int FRONT_LEFT = 3;
   public static final int BACK_LEFT = 4;
 
   public static final int FRONT_RIGHT = 2;
   public static final int BACK_RIGHT = 1;
-  
+
   // Controller IDs
   public static final int DRIVER = 0;
-    // These are button IDs
+  // These are button IDs
   public static final int LEFT_JOYSTICK = 1;
   public static final int RIGHT_JOYSTICK = 4;
   // General Constants
   public static final int TIMEOUT = 10;
   public static final int ENCODER_TIMEOUT = 10;
   public static final int ENCODER_WINDOW_SIZE = 4;
-    public static final int ENCODER_STATUS_FRAME_PERIOD = 4;
+  public static final int ENCODER_STATUS_FRAME_PERIOD = 4;
+
+  public static final int LEFT_POSITION = 0;
+  public static final int CENTER_POSITION = 1;
+  public static final int RIGHT_POSITION = 2;
+  public static final int ILLEGAL_POSITION = 3;
 }

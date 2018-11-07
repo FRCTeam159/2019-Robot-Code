@@ -22,7 +22,7 @@ import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.followers.DistanceFollower;
 import jaci.pathfinder.modifiers.TankModifier;
 
-public class DrivePath extends Command implements PhysicalConstants, RobotMap {
+public class DrivePath extends Command implements RobotMap {
 
     private static final double TIME_STEP = 0.02;
     private static final double wheelbase = inchesToMeters(26);
@@ -74,13 +74,13 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
        
         double KI = 0.0;
         double KD = 0.0;
-        double KV = 1.0 / MAX_VEL;
+        double KV = 1.0 / PhysicalConstants.MAX_VEL;
         double KA = 0.0;
 
         timer.start();
         timer.reset();
 
-        trajectory = calculateTrajectory(distance, offSet, MAX_VEL, MAX_ACC, MAX_JRK);
+        trajectory = calculateTrajectory(distance, offSet, PhysicalConstants.MAX_VEL, PhysicalConstants.MAX_ACC, PhysicalConstants.MAX_JRK);
 
         if (trajectory == null) {
             SmartDashboard.putString("Target", "ERROR");
@@ -101,9 +101,9 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
         rightTrajectory = modifier.getRightTrajectory(); // Get the Right Side
 
         leftFollower = new DistanceFollower(leftTrajectory);
-        leftFollower.configurePIDVA(KP, KI, KD, KV, KA);
+        leftFollower.configurePIDVA(PhysicalConstants.KP, KI, KD, KV, KA);
         rightFollower = new DistanceFollower(rightTrajectory);
-        rightFollower.configurePIDVA(KP, KI, KD, KV, KA);
+        rightFollower.configurePIDVA(PhysicalConstants.KP, KI, KD, KV, KA);
         System.out.format("trajectory length:%data runtime:%f calctime:%f\n", trajectory.length(), runtime,
                 timer.get());
 
@@ -163,7 +163,7 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
 
         double turn = 0;
 
-        double gh = Robot.m_drivetrain.getHeading(); // Assuming the gyro is giving a value in degrees
+        double gh = -Robot.m_drivetrain.getHeading(); // Assuming the gyro is giving a value in degrees
         gh = unwrap(last_heading, gh);
 
         double th = Pathfinder.r2d(leftFollower.getHeading()); // Should also be in degrees
@@ -171,7 +171,7 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
         th = th > 180 ? th - 360 : th;
         double headingError = th - gh;
         if (useGyro) {
-            turn = GFACT * (-1.0 / 180.0) * headingError;
+            turn = PhysicalConstants.GFACT * (-1.0 / 180.0) * headingError;
         }
 
         double lval = leftPower - turn;
@@ -232,7 +232,7 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
     }
 
     private boolean publishPathAllowed() {
-        return SmartDashboard.getBoolean("Publish Path", false);
+        return Robot.publishPath;
     }
 
     private Waypoint[] mirrorWaypoints(Waypoint[] waypoints) {
@@ -276,7 +276,7 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
 
     private Waypoint[] calculatePathWaypoints(double d, double y) {
         Waypoint[] returnWaypoints = null;
-        if (y == 0.0)
+        if (Robot.robotPosition == CENTER_POSITION)
             returnWaypoints = calculateStraightPoints(d);
         else 
             returnWaypoints = calculateHookpoints(d, y);
@@ -317,6 +317,7 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
 
     private void printInitializeMessage() {
         System.out.println("DrivePath.initialize()");
+        System.out.println("Publish :" + Robot.publishPath);
     }
 
     private void printEndMessage() {
@@ -328,7 +329,13 @@ public class DrivePath extends Command implements PhysicalConstants, RobotMap {
     }
 
     private Waypoint[] calculateHookpoints(double x, double y){
-            return new Waypoint[]{new Waypoint (0, 0, 0), new Waypoint(x, y, Pathfinder.d2r(90))};
+        Waypoint[] waypoints = new Waypoint[2];
+        waypoints[0] = new Waypoint(0, 0, 0);
+        waypoints[1] = new Waypoint(x, y, Pathfinder.d2r(90));
+        if (Robot.robotPosition ==  RIGHT_POSITION)
+            return waypoints;
+        else 
+            return mirrorWaypoints(waypoints);
     }
 
     private void addPlotData() {

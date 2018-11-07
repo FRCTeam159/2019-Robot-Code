@@ -1,0 +1,96 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="Publish Path" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
+		<location x="575" y="52"/>
+	</widget>
+	<widget field="Use Gyro" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
+		<location x="590" y="31"/>
+	</widget>
+	<widget field="Calibrate" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
+		<location x="592" y="11"/>
+	</widget>
+	<widget field="Position" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="600" y="93"/>
+	</widget>
+	<widget field="MAX_ACC" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="683" y="32"/>
+	</widget>
+	<widget field="Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="433" y="102"/>
+	</widget>
+	<widget field="Right wheels" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="834" y="30"/>
+	</widget>
+	<widget field="Right distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="406" y="148"/>
+	</widget>
+	<widget field="GFACT" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="697" y="78"/>
+	</widget>
+	<widget field="Left distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="412" y="125"/>
+	</widget>
+	<widget field="Target" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="438" y="36"/>
+	</widget>
+	<widget field="MAX_JRK" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="686" y="55"/>
+	</widget>
+	<widget field="KP" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="717" y="102"/>
+		<width>100</width>
+	</widget>
+	<widget field="Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="436" y="173"/>
+	</widget>
+	<widget field="Left wheels" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="840" y="8"/>
+	</widget>
+	<widget field="Heading" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="430" y="14"/>
+	</widget>
+	<widget field="MAX_VEL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="687" y="10"/>
+	</widget>
+</dashboard>
+<live-window>
+	<widget field="DriveTrain" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="208"/>
+	</widget>
+	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<widget field="Talon SRX [1]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="Talon SRX [1]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
+			<location x="0" y="0"/>
+			<height>0</height>
+			<width>0</width>
+		</widget>
+		<widget field="Talon SRX [4]" type="Speed Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
+			<location x="6" y="16"/>
+			<height>46</height>
+			<width>293</width>
+		</widget>
+		<widget field="Talon SRX [2]" type="Speed Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
+			<location x="6" y="62"/>
+			<height>46</height>
+			<width>293</width>
+		</widget>
+		<widget field="ADXRS450_Gyro[0]" type="Gyro" class="edu.wpi.first.smartdashboard.gui.elements.Compass">
+			<location x="6" y="108"/>
+			<height>150</height>
+			<width>293</width>
+		</widget>
+		<widget field="Talon SRX [3]" type="Speed Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
+			<location x="6" y="258"/>
+			<height>46</height>
+			<width>293</width>
+		</widget>
+		<location x="0" y="0"/>
+		<width>305</width>
+		<height>311</height>
+	</widget>
+</live-window>
+</xml>
