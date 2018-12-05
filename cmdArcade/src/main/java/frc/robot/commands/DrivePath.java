@@ -60,7 +60,7 @@ public class DrivePath extends Command implements RobotMap {
     private double offSet;
 
     // Using Jaci's conventions. 
-    // Y values are inverted, left and right wheels are inverted, counter-clockwise is clockwise. Everythign is mirrored.
+    // Y values are inverted, left and right wheels are inverted, counter-clockwise is clockwise. Everything is mirrored.
 
     public DrivePath(double d, double y) {
         requires(Robot.m_drivetrain);
