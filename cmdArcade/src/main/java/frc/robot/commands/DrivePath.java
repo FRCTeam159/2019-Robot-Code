@@ -38,6 +38,7 @@ public class DrivePath extends Command implements RobotMap {
 
     // private static int plotId = 0;
     private int pathIndex = 0;
+    private int pathPoints = 0;
 
     private Timer timer = new Timer();
     private Timer pushTimer = new Timer();
@@ -55,10 +56,11 @@ public class DrivePath extends Command implements RobotMap {
     // TODO use non deprecated class (edu.wpi.first.networktables.NetworkTable)
     private static NetworkTable table = NetworkTable.getTable("datatable");
 
-    public static boolean useGyro = false;
-
     private double distance;
     private double offSet;
+
+    // Using Jaci's conventions. 
+    // Y values are inverted, left and right wheels are inverted, counter-clockwise is clockwise. Everythign is mirrored.
 
     public DrivePath(double d, double y) {
         requires(Robot.m_drivetrain);
@@ -81,14 +83,14 @@ public class DrivePath extends Command implements RobotMap {
         timer.reset();
 
         trajectory = calculateTrajectory(distance, offSet, PhysicalConstants.MAX_VEL, PhysicalConstants.MAX_ACC, PhysicalConstants.MAX_JRK);
-
+        
         if (trajectory == null) {
             SmartDashboard.putString("Target", "ERROR");
             runtime = 0;
             return;
         }
 
-        
+        pathPoints = trajectory.length();
         // Create the Modifier Object
         TankModifier modifier = new TankModifier(trajectory);
         modifier.modify(wheelbase);
@@ -170,12 +172,12 @@ public class DrivePath extends Command implements RobotMap {
 
         th = th > 180 ? th - 360 : th;
         double headingError = th - gh;
-        if (useGyro) {
+        if (Robot.useGyro) {
             turn = PhysicalConstants.GFACT * (-1.0 / 180.0) * headingError;
         }
 
-        double lval = leftPower - turn;
-        double rval = rightPower + turn;
+        double lval = leftPower + turn;
+        double rval = rightPower - turn;
 
 
         if (debugCommand) {
@@ -186,7 +188,9 @@ public class DrivePath extends Command implements RobotMap {
             debugPathError();
         }
         if (publishPathAllowed()) {
-            addPlotData();
+            int maxpoints = trajectory.length();
+            if (pathIndex <= maxpoints)
+                addPlotData();
         }
         pathIndex++;
         last_heading = gh;
@@ -339,6 +343,10 @@ public class DrivePath extends Command implements RobotMap {
     }
 
     private void addPlotData() {
+        if (pathIndex >= pathPoints) {
+            System.out.println("Error pathIndex (" + pathIndex + ") is greater than pathPoints (" + pathIndex +")");
+        return;
+        }
         PathData pathData = new PathData();
 
         pathData.time = timer.get();
@@ -348,22 +356,24 @@ public class DrivePath extends Command implements RobotMap {
         Segment rightSegment = rightTrajectory.get(pathIndex);
         pathData.data[1] = metersToInches(leftSegment.position);
         pathData.data[3] = metersToInches(rightSegment.position);
-        pathData.data[4] = Robot.m_drivetrain.getHeading(); // Assuming the gyro is giving a value in degrees
+        pathData.data[4] = -Robot.m_drivetrain.getHeading(); // Assuming the gyro is giving a value in degrees
         double th = Pathfinder.r2d(rightSegment.heading); // Should also be in degrees
         pathData.data[5] = th > 180 ? th - 360 : th; // convert to signed angle fixes problem:th 0->360 gh:-180->180
         pathDataList.add(pathData);
     }
 
     private static void publish(ArrayList<PathData> dataList, int traces) {
-        double info[] = new double[3];
+        double info[] = new double[4];
         int points = dataList.size();
         info[0] = plotCount;
         info[1] = traces;
         info[2] = points;
+        info[3] = 3;
 
         System.out.println("Publishing Plot Data");
         // table.putValue("NewPlot", NetworkTableValue.makeDoubleArray(info));
-        table.putNumberArray("NewPlot" + plotCount, info);
+        table.putNumber("NewPlot",plotCount); 
+        table.putNumberArray("PlotParams" + plotCount, info);
 
         for (int i = 0; i < points; i++) {
             PathData pathData = dataList.get(i);

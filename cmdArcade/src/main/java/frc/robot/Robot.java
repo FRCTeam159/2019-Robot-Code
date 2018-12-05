@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Autonomous;
+import frc.robot.subsystems.Cameras;
 //import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveTrain;
 
@@ -27,6 +28,7 @@ import frc.robot.subsystems.DriveTrain;
 public class Robot extends TimedRobot implements RobotMap {
   public static DriveTrain m_drivetrain = new DriveTrain();
   public static OI m_oi;
+  public static Cameras m_cameras = new Cameras();
 
   Command m_autonomousCommand;
   SendableChooser<Integer> positionChooser = new SendableChooser<>();
