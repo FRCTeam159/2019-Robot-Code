@@ -1,10 +1,32 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Show HSV" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
+		<location x="623" y="286"/>
+	</widget>
+	<widget field="Aspect Ratio" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="615" y="197"/>
+		<height>20</height>
+	</widget>
+	<widget field="H angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="638" y="265"/>
+	</widget>
+	<widget field="V angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="639" y="242"/>
+	</widget>
+	<widget field="W distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="622" y="219"/>
+	</widget>
+	<widget field="H distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="399" y="78"/>
+	</widget>
+	<widget field="Targets" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="399" y="57"/>
+	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
 		<location x="1" y="0"/>
 		<width>397</width>
 		<height>375</height>
-		<property name="Camera Choice" value=""/>
+		<property name="Camera Choice" value="Rectangle"/>
 	</static-widget>
 	<widget field="Publish Path" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
 		<location x="576" y="53"/>
@@ -60,46 +82,5 @@
 	</widget>
 </dashboard>
 <live-window>
-	<widget field="Cameras" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<location x="0" y="335"/>
-	</widget>
-	<widget field="DriveTrain" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<location x="0" y="312"/>
-	</widget>
-	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<widget field="Talon SRX [3]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
-		</widget>
-		<widget field="Talon SRX [3]" type="Table" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
-			<location x="0" y="0"/>
-			<height>0</height>
-			<width>0</width>
-		</widget>
-		<widget field="Talon SRX [4]" type="Speed Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
-			<location x="6" y="16"/>
-			<height>45</height>
-			<width>297</width>
-		</widget>
-		<widget field="ADXRS450_Gyro[0]" type="Gyro" class="edu.wpi.first.smartdashboard.gui.elements.Compass">
-			<location x="6" y="61"/>
-			<height>150</height>
-			<width>297</width>
-		</widget>
-		<widget field="Talon SRX [1]" type="Speed Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
-			<location x="6" y="211"/>
-			<height>45</height>
-			<width>297</width>
-		</widget>
-		<widget field="Talon SRX [2]" type="Speed Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
-			<location x="6" y="256"/>
-			<height>45</height>
-			<width>297</width>
-		</widget>
-		<location x="0" y="0"/>
-		<width>309</width>
-		<height>307</height>
-	</widget>
 </live-window>
 </xml>

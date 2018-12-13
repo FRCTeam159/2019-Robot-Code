@@ -17,6 +17,7 @@ import frc.robot.commands.Autonomous;
 import frc.robot.subsystems.Cameras;
 //import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.VisionProcess;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,7 +29,7 @@ import frc.robot.subsystems.DriveTrain;
 public class Robot extends TimedRobot implements RobotMap {
   public static DriveTrain m_drivetrain = new DriveTrain();
   public static OI m_oi;
-  public static Cameras m_cameras = new Cameras();
+//  public static Cameras m_cameras = new Cameras();
 
   Command m_autonomousCommand;
   SendableChooser<Integer> positionChooser = new SendableChooser<>();
@@ -41,9 +42,14 @@ public class Robot extends TimedRobot implements RobotMap {
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
+  VisionProcess vision;
+
   @Override
   public void robotInit() {
     m_oi = new OI();
+    vision = new VisionProcess();
+    vision.init();
+    vision.start();
     putValuesOnSmartDashboard();
     // m_chooser.addDefault("Default Auto", new ExampleCommand());
     // chooser.addObject("My Auto", new MyAutoCommand());
