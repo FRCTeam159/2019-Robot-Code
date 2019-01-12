@@ -21,6 +21,8 @@ public interface RobotMap {
   public static final int FRONT_RIGHT = 2;
   public static final int BACK_RIGHT = 1;
 
+  public static final int ELEVATOR_MOTOR = 5;
+
   // Controller IDs
   public static final int DRIVER = 0;
   // These are button IDs
@@ -36,4 +38,5 @@ public interface RobotMap {
   public static final int CENTER_POSITION = 1;
   public static final int RIGHT_POSITION = 2;
   public static final int ILLEGAL_POSITION = 3;
+  
 }

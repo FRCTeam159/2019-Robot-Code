@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team159.robot.RobotMap;
-import org.usfirst.frc.team159.robot.commands.ElevatorCommands;
+import frc.robot.RobotMap;
+import frc.robot.commands.ElevatorCommands;
 
 /**
  *

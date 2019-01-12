@@ -17,7 +17,6 @@ import frc.robot.commands.Autonomous;
 import frc.robot.subsystems.Cameras;
 //import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.VisionProcess;
 
 /**
@@ -30,7 +29,6 @@ import frc.robot.subsystems.VisionProcess;
 public class Robot extends TimedRobot implements RobotMap {
   public static DriveTrain m_drivetrain = new DriveTrain();
   public static OI m_oi;
-  public static Elevator m_elevator = new Elevator();
 //  public static Cameras m_cameras = new Cameras();
 
   Command m_autonomousCommand;
