@@ -1,41 +1,32 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Range" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="810" y="204"/>
+	</widget>
 	<widget field="Show HSV" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
-		<location x="623" y="286"/>
+		<location x="661" y="371"/>
 	</widget>
 	<widget field="Aspect Ratio" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="615" y="197"/>
+		<location x="614" y="216"/>
 		<height>20</height>
 	</widget>
-	<widget field="H angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="638" y="265"/>
-	</widget>
-	<widget field="V angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="639" y="242"/>
-	</widget>
-	<widget field="W distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="622" y="219"/>
-	</widget>
-	<widget field="H distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="399" y="78"/>
-	</widget>
 	<widget field="Targets" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="399" y="57"/>
+		<location x="638" y="192"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
-		<location x="1" y="0"/>
-		<width>397</width>
-		<height>375</height>
+		<location x="20" y="0"/>
+		<width>573</width>
+		<height>484</height>
 		<property name="Camera Choice" value="Rectangle"/>
 	</static-widget>
 	<widget field="Publish Path" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
-		<location x="576" y="53"/>
+		<location x="859" y="149"/>
 	</widget>
 	<widget field="Use Gyro" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
-		<location x="593" y="32"/>
+		<location x="863" y="122"/>
 	</widget>
 	<widget field="Calibrate" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
-		<location x="591" y="10"/>
+		<location x="862" y="97"/>
 	</widget>
 	<widget field="Position" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="600" y="93"/>
@@ -44,22 +35,22 @@
 		<location x="683" y="32"/>
 	</widget>
 	<widget field="Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="433" y="102"/>
+		<location x="815" y="302"/>
 	</widget>
 	<widget field="Right wheels" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="834" y="30"/>
 	</widget>
 	<widget field="Right distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="406" y="148"/>
+		<location x="784" y="274"/>
 	</widget>
 	<widget field="GFACT" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="697" y="78"/>
 	</widget>
 	<widget field="Left distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="412" y="125"/>
+		<location x="784" y="250"/>
 	</widget>
 	<widget field="Target" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="438" y="36"/>
+		<location x="827" y="353"/>
 	</widget>
 	<widget field="MAX_JRK" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="686" y="55"/>
@@ -69,16 +60,42 @@
 		<width>100</width>
 	</widget>
 	<widget field="Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="436" y="173"/>
+		<location x="822" y="328"/>
 	</widget>
 	<widget field="Left wheels" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="840" y="8"/>
 	</widget>
 	<widget field="Heading" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="430" y="14"/>
+		<location x="639" y="341"/>
+		<height>20</height>
 	</widget>
 	<widget field="MAX_VEL" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="687" y="10"/>
+	</widget>
+	<widget field="Target Aspect" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="610" y="289"/>
+	</widget>
+	<widget field="H offset" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="703" y="162"/>
+	</widget>
+	<widget field="Target Height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="610" y="266"/>
+	</widget>
+	<widget field="Target Width" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="613" y="242"/>
+		<height>21</height>
+	</widget>
+	<widget field="Auto Selector" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="837" y="71"/>
+	</widget>
+	<widget field="Process Time" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="805" y="393"/>
+	</widget>
+	<widget field="V offset" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="702" y="140"/>
+	</widget>
+	<widget field="Target Tilt" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="629" y="314"/>
 	</widget>
 </dashboard>
 <live-window>
