@@ -63,20 +63,23 @@ public class VisionProcess extends Thread {
   double angleFactorHeight = Math.toDegrees(cameraFovH) / imageHeight;
   // expected width/height ratio
 
+  boolean useSerial = false;
+
   SerialPort ultrasonicPort;
   DigitalOutput rangingPin;
 
   AnalogInput rangefinder = new AnalogInput(1);
   double targetAspectRatio = targetWidth / targetHeight;
-  double range_inches_per_count = 1.0/19.744;
-  //double range_inches_per_count = 1.0;
+  double range_inches_per_count = 1.0 / 19.744;
+  // double range_inches_per_count = 1.0;
   double min_range = 35;
   double max_range = 70;
   boolean range_error = false;
   double range = 0;
 
   boolean getRangeError() {
-    double range = range_inches_per_count * rangefinder.getValue();
+    //double range = range_inches_per_count * rangefinder.getValue();
+    double range = rangefinder.getValue();
     if (range > max_range || range < min_range)
       range_error = true;
     else
@@ -85,30 +88,31 @@ public class VisionProcess extends Thread {
   }
 
   public double getRange() {
-    //double range = range_inches_per_count * rangefinder.getValue();
-    //double range = rangefinder.getValue();
+    if (useSerial) {
 
-    String response;
-			
-    try
-    {
-      response = ultrasonicPort.readString();
-      if(response.isBlank())
-        System.out.println("Serial =empty");
-      else{
-        System.out.println("Serial =(" + response+")");
-        String numberPart = response.substring(1, 5); //remove R character and carriage return
-        int distance = Integer.parseInt(numberPart);
-        range = (double) distance;
-        System.out.println("range="+range);
+      String response;
+
+      try {
+        response = ultrasonicPort.readString();
+        if (response.isBlank())
+          System.out.println("Serial =empty");
+        else {
+          System.out.println("Serial =(" + response + ")");
+          String numberPart = response.substring(1, 5); // remove R character and carriage return
+          int distance = Integer.parseInt(numberPart);
+          range = (double) distance;
+          System.out.println("range=" + range);
+        }
+      } catch (Exception ex) {
+        System.out.println("Get range error: " + ex.toString());
+        // ex.printStackTrace();
       }
+      return range;
     }
-    catch(Exception ex)
-    {
-      System.out.println("Get range error: " + ex.toString());
-      //ex.printStackTrace();
+    else {
+      double range = range_inches_per_count * rangefinder.getValue();
+      return range;
     }
-    return range;
   }
 
   public void init() {
@@ -138,8 +142,9 @@ public class VisionProcess extends Thread {
     SmartDashboard.putBoolean("Show HSV", false);
     System.out.println("fov H:" + Math.toDegrees(cameraFovH) + " W:" + Math.toDegrees(cameraFovW));
     System.out.println("Expected Target Aspect ratio:" + round10(targetAspectRatio));
-   
-    }
+
+  }
+
   Point center(Rect r) {
     double cx = r.tl().x + 0.5 * r.width;
     double cy = r.tl().y + 0.5 * r.height;
@@ -159,19 +164,17 @@ public class VisionProcess extends Thread {
     // TODO: use a network tables data structure to pass target params to Robot
     // Program
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable table = inst.getTable("targetdata");
+    NetworkTable table = inst.getTable("TargetData");
     edu.wpi.first.wpilibj.Timer timer = new edu.wpi.first.wpilibj.Timer();
     timer.start();
     try {
       rangingPin = new DigitalOutput(0);
-		  rangingPin.set(true);
+      rangingPin.set(true);
       ultrasonicPort = new SerialPort(9600, Port.kOnboard, 8, Parity.kNone, StopBits.kOne);
       ultrasonicPort.setTimeout(2);
       ultrasonicPort.setReadBufferSize(6);
       ultrasonicPort.reset();
-    }
-    catch(RuntimeException ex)
-    {
+    } catch (RuntimeException ex) {
       System.out.println("Failure to open serial port.");
     }
     while (true) {
@@ -244,11 +247,13 @@ public class VisionProcess extends Thread {
         SmartDashboard.putNumber("Target Aspect", round10((double) (w) / h));
         SmartDashboard.putNumber("Target Tilt", round10(a));
 
-        
-        SmartDashboard.putBoolean("error",(getRangeError()));
+        SmartDashboard.putBoolean("error", (getRangeError()));
 
       }
-      SmartDashboard.putNumber("Range", getRange());
+      double range = getRange();
+      table.getEntry("Range").setDouble(range);
+
+      SmartDashboard.putNumber("Range", range);
 
       for (int i = 0; i < rects.size(); i++) {
         RotatedRect r = rects.get(i);
