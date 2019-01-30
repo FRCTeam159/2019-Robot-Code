@@ -1,5 +1,8 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="RangeError" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="803" y="436"/>
+	</widget>
 	<widget field="Range" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="810" y="204"/>
 	</widget>
@@ -85,9 +88,6 @@
 		<location x="613" y="242"/>
 		<height>21</height>
 	</widget>
-	<widget field="Auto Selector" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="837" y="71"/>
-	</widget>
 	<widget field="Process Time" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="805" y="393"/>
 	</widget>
@@ -99,5 +99,28 @@
 	</widget>
 </dashboard>
 <live-window>
+	<widget field="DriveTrain" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="0" y="23"/>
+	</widget>
+	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<widget field="AnalogInput[1]" type="Analog Input" class="edu.wpi.first.smartdashboard.livewindow.elements.SingleNumberDisplay">
+			<location x="6" y="16"/>
+			<height>20</height>
+			<width>250</width>
+		</widget>
+		<widget field="ADXRS450_Gyro[0]" type="Gyro" class="edu.wpi.first.smartdashboard.gui.elements.Compass">
+			<location x="6" y="36"/>
+			<height>150</height>
+			<width>250</width>
+		</widget>
+		<widget field="DigitalOutput[0]" type="Digital Output" class="edu.wpi.first.smartdashboard.livewindow.elements.DigitalOutputController">
+			<location x="62" y="186"/>
+			<height>23</height>
+			<width>138</width>
+		</widget>
+		<location x="0" y="0"/>
+		<width>262</width>
+		<height>215</height>
+	</widget>
 </live-window>
 </xml>

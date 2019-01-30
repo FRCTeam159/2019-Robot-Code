@@ -76,6 +76,8 @@ public class VisionProcess extends Thread {
   double max_range = 70;
   boolean range_error = false;
   double range = 0;
+double targetAngle = 0;
+double targetOffset = 0;
 
   boolean getRangeError() {
     //double range = range_inches_per_count * rangefinder.getValue();
@@ -136,7 +138,7 @@ public class VisionProcess extends Thread {
     SmartDashboard.putNumber("Target Aspect", 0);
     SmartDashboard.putNumber("Target Tilt", 0);
     SmartDashboard.putNumber("Range", 0);
-    SmartDashboard.putBoolean("error", false);
+   // SmartDashboard.putBoolean("rangeError", false);
 
     // SmartDashboard.putNumber("Angle", 0);
     SmartDashboard.putBoolean("Show HSV", false);
@@ -217,43 +219,49 @@ public class VisionProcess extends Thread {
         rects.add(r);
       }
 
+
+
       // calculate distance to target
       // - using ht
       SmartDashboard.putNumber("Targets", rects.size());
       if (biggest != null) {
         double h = biggest.size.height;
         double w = biggest.size.width;
-        double a = biggest.angle;
+         targetAngle = biggest.angle;
 
         if (biggest.size.width > biggest.size.height) {
           h = biggest.size.width;
           w = biggest.size.height;
-          a += 90.0;
+          targetAngle += 90.0;
         }
         double dh = distanceFactorHeight / biggest.size.height;
         double dw = distanceFactorWidth / biggest.size.width;
         Point ctr = biggest.center;
-        double hoff = angleFactorWidth * (ctr.x - 0.5 * imageWidth);
+        targetOffset = angleFactorWidth * (ctr.x - 0.5 * imageWidth);
         double voff = -angleFactorHeight * (ctr.y - 0.5 * imageHeight); // invert y !
 
         // SmartDashboard.putNumber("H distance", round10(dh));
         // SmartDashboard.putNumber("W distance", round10(dw));
-        SmartDashboard.putNumber("H offset", round10(hoff));
+        SmartDashboard.putNumber("H offset", round10(targetOffset));
         SmartDashboard.putNumber("V offset", round10(voff));
         SmartDashboard.putNumber("Aspect Ratio", round10((double) (biggest.size.width) / biggest.size.height));
         SmartDashboard.putNumber("Process Time", dt);
         SmartDashboard.putNumber("Target Width", round10(w));
         SmartDashboard.putNumber("Target Height", round10(h));
         SmartDashboard.putNumber("Target Aspect", round10((double) (w) / h));
-        SmartDashboard.putNumber("Target Tilt", round10(a));
+        SmartDashboard.putNumber("Target Tilt", round10(targetAngle));
 
-        SmartDashboard.putBoolean("error", (getRangeError()));
+        //SmartDashboard.putBoolean("error", (getRangeError()));
 
-      }
-      double range = getRange();
+      } 
+       double range = getRange();
+      SmartDashboard.putNumber("Range", round10(range));
+
       table.getEntry("Range").setDouble(range);
-
-      SmartDashboard.putNumber("Range", range);
+      table.getEntry("Target Tilt").setDouble(targetAngle);
+      table.getEntry("H offset").setDouble(targetOffset);
+     table.getEntry("Targets").setDouble(rects.size());
+    
 
       for (int i = 0; i < rects.size(); i++) {
         RotatedRect r = rects.get(i);
