@@ -63,16 +63,20 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
    // System.out.println((m_joystick.getRawAxis(1)));
-   if (motorvalue > 1.0){
+   /*if (motorvalue > 1.0){
     m_motor.set (0);
     return;
-   }
+   } */
    double position = m_encoder.getPosition();
    double velocity = m_encoder.getVelocity();
    System.out.println(position + "," + velocity);
-   m_motor.set (motorvalue);
-   motorvalue += 1.0 / motorsteps;
-  // m_motor.set(-m_joystick.getRawAxis(1));
+   //m_motor.set (motorvalue);
+double stick = -m_joystick.getRawAxis(1);
+   //motorvalue += 1.0 / motorsteps;
+   if(Math.abs(stick) < .2){
+   stick = 0;
+   }
+   m_motor.set(stick);
   }
 
 }

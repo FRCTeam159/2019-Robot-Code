@@ -15,7 +15,7 @@ public class Cameras extends Subsystem {
 
 	public Cameras() {
 		CameraServer server = CameraServer.getInstance();
-		UsbCamera driverCamera = server.startAutomaticCapture("Driver", 0);
+		//UsbCamera driverCamera = server.startAutomaticCapture("Driver", 0);
 //		UsbCamera elevatorCamera = server.startAutomaticCapture("Elevator", 1);
 		//driverCamera.setFPS(25);
 		//driverCamera.setResolution(320,240);

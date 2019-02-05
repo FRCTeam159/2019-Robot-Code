@@ -35,6 +35,12 @@ public class Robot extends TimedRobot implements RobotMap {
   public static boolean calibrate = false;
   public static int robotPosition = CENTER_POSITION;
   public static boolean publishPath = false;
+  public static double P=0.02;
+  public static double I=1.0E-4;
+  public static double D=0;
+  public static boolean isAuto = false;
+  public static boolean isTele = false;
+  public static boolean doAuto = false;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -46,8 +52,8 @@ public class Robot extends TimedRobot implements RobotMap {
   public void robotInit() {
     m_oi = new OI();
     vision = new VisionProcess();
-    vision.init();
-    vision.start();
+    //vision.init();
+    //vision.start();
     putValuesOnSmartDashboard();
     // m_chooser.addDefault("Default Auto", new ExampleCommand());
     // chooser.addObject("My Auto", new MyAutoCommand());
@@ -74,6 +80,9 @@ public class Robot extends TimedRobot implements RobotMap {
    */
   @Override
   public void disabledInit() {
+    System.out.println("Disabled");
+    isTele = false;
+    isAuto = false;
   }
 
   @Override
@@ -96,9 +105,22 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void autonomousInit() {
     getDashboardData();
+    if(doAuto){
+    isAuto = true;
+    isTele = false;
+    }
+    else{
+      isAuto = false;
+      isTele = true;
+    }
+    System.out.println("autonomous init");
+    m_drivetrain.reset();
+
     robotPosition = getPosition();
+    if(doAuto){
     CommandGroup autonomousCommand = new Autonomous();
     autonomousCommand.start();
+  } 
 
   }
 
@@ -112,7 +134,10 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void teleopInit() {
+    isAuto = false;
+    isTele = true;
     m_drivetrain.reset();
+    System.out.println("Teleop Init");
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -155,7 +180,11 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putString("Target", "Calculating");
     SmartDashboard.putBoolean("Calibrate", calibrate);
     SmartDashboard.putBoolean("Publish Path", publishPath);
-  }
+    SmartDashboard.putNumber("P", P);
+    SmartDashboard.putNumber("I", I);
+    SmartDashboard.putNumber("D", D);
+    SmartDashboard.putBoolean("Do Auto", doAuto);
+    }
 
   void getDashboardData() {
     useGyro = SmartDashboard.getBoolean("Use Gyro", useGyro);
@@ -166,6 +195,10 @@ public class Robot extends TimedRobot implements RobotMap {
     PhysicalConstants.KP = SmartDashboard.getNumber("KP", PhysicalConstants.KP);
     calibrate = SmartDashboard.getBoolean("Calibrate", calibrate);
     publishPath = SmartDashboard.getBoolean("Publish Path", publishPath);
+    P=SmartDashboard.getNumber("P", P);
+    I=SmartDashboard.getNumber("I", I);
+    D=SmartDashboard.getNumber("D", D);
+    doAuto = SmartDashboard.getBoolean("Do Auto", false);
 
   }
 }

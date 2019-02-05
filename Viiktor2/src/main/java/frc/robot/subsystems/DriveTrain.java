@@ -134,7 +134,7 @@ public class DriveTrain extends Subsystem implements RobotMap {
 	public double getDistance() {
 		double d1 = getRightDistance();
 		double d2 = getLeftDistance();
-		return 0.5 * (d1 + d2);
+		return (0.5 * (d1 + d2))*12;
 	}
 
 	public double getRightDistance() {

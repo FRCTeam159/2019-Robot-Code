@@ -40,6 +40,8 @@ public class DriveWithGamepad extends Command implements RobotMap{
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if(!Robot.isTele)
+    return;
     Joystick stick = OI.driverController;
     double zs=-stick.getRawAxis(RobotMap.LEFT_JOYSTICK);
     double xs=stick.getRawAxis(RobotMap.RIGHT_JOYSTICK);
@@ -64,7 +66,7 @@ public class DriveWithGamepad extends Command implements RobotMap{
       turnValue = (turnAxis / Math.abs(turnAxis)) * Math.pow(Math.abs(turnAxis), turnExponent); // Math.abs the
                                                                                                 // turnValue
     }
-
+    System.out.println("move Value is: " + moveValue);
     turnValue *= Math.abs(moveValue) * (1 - turnScale) + turnScale;
     Robot.m_drivetrain.arcadeDrive(moveValue, turnValue);
   }
@@ -72,7 +74,7 @@ public class DriveWithGamepad extends Command implements RobotMap{
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return !(Robot.isTele);
   }
 
   // Called once after isFinished returns true

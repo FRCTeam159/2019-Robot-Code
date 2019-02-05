@@ -17,13 +17,13 @@ import frc.robot.OI;
  * An example command.  You can replace me with your own command.
  */
 public class DriveWithGamepad extends Command implements RobotMap{
-  double powerScale = 2.0;
+  double powerScale = 2.1;
   double turnScale = 0.65;
-  double moveExponent = 0.5; // Raise moveExponent and turnExponent for more control at lower speeds,
-  double turnExponent = 0.5; // and lower them for more control at higher speeds.
-  double xMinT = 0.28;
-  double xMinO = 0;
-  double zMinT = 0.1;
+  double moveExponent = 0.75; // Raise moveExponent and turnExponent for more control at lower speeds,
+  double turnExponent = 0.75; // and lower them for more control at higher speeds.
+  double xMinT = 0.2;
+  double xMinO = 0.05;
+  double zMinT = 0.05;
   double zMinO = 0;
   boolean useDeadband = true;
   boolean Debug = false;

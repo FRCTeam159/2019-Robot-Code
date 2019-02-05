@@ -126,6 +126,11 @@ double targetOffset = 0;
     camera = CameraServer.getInstance().startAutomaticCapture("Targeting", 0);
     camera.setFPS(60);
     camera.setResolution((int) imageWidth, (int) imageHeight);
+    camera.setBrightness(26);
+    camera.setExposureManual(6);
+    //camera1.SetWhiteBalanceManual(50)
+    //SmartDashboard.putNumber("brightness", 5);
+    //SmartDashboard.putNumber("exposure", 5);
     SmartDashboard.putNumber("Targets", 0);
     // SmartDashboard.putNumber("H distance", 0);
     // SmartDashboard.putNumber("W distance", 1);
@@ -180,6 +185,11 @@ double targetOffset = 0;
       System.out.println("Failure to open serial port.");
     }
     while (true) {
+    //camera1.SetWhiteBalanceManual(50)
+   //double b = SmartDashboard.getNumber("brightness", 5);
+   // double e = SmartDashboard.getNumber("exposure", 5);
+   // camera.setBrightness((int)b);
+   // camera.setExposureManual((int)e);
       try {
         Thread.sleep(20);
       } catch (InterruptedException ex) {

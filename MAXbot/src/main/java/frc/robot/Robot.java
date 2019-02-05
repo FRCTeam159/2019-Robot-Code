@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Autonomous;
 import frc.robot.subsystems.DriveTrain;
 //import frc.robot.subsystems.VisionProcess;
+import frc.robot.subsystems.Elevator;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,6 +28,8 @@ import frc.robot.subsystems.DriveTrain;
 public class Robot extends TimedRobot implements RobotMap {
   public static DriveTrain m_drivetrain = new DriveTrain();
   public static OI m_oi;
+  public static Elevator elevator = new Elevator();
+  public static final double MAX_ELEVATOR_CURRENT = 40;
 //  public static Cameras m_cameras = new Cameras();
 
   Command m_autonomousCommand;

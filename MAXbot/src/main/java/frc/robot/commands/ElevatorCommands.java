@@ -31,7 +31,7 @@ public class ElevatorCommands extends Command {
 
     //	 Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        Joystick stick = OI.operatorController;
+        Joystick stick = OI.driverController;
         //TODO square stick inputs?
         double leftStick = stick.getRawAxis(RobotMap.LEFT_TRIGGER);
         double rightStick = stick.getRawAxis(RobotMap.RIGHT_TRIGGER);
@@ -46,11 +46,6 @@ public class ElevatorCommands extends Command {
 //        	Robot.elevator.setElevatorTarget(Elevator.MAX_HEIGHT);
 //        	goingToTop = true;
 //        }
-        if(goToSwitchPressed) {
-        	Robot.elevator.setElevatorTarget(Elevator.SWITCH_HEIGHT);
-        	goingToSwitch = true;
-        }
-        
         if(goingToBottom && Robot.elevator.getPosition() < Elevator.MOVE_RATE) {
         	goingToBottom = false;
         }

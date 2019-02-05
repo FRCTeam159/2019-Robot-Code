@@ -47,7 +47,11 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput {
     
 	public static final double SWITCH_HEIGHT = 26;
 	public static final double SCALE_HEIGHT = MAX_HEIGHT - 4;
-	public static final double START_HEIGHT = 4;
+    public static final double START_HEIGHT = 4;
+    public static final double CARGO_HATCH_HEIGHT = 16;
+    public static final double CARGO_BALL_HEIGHT = 36;
+    public static final double ROCKET_BALL_HEIGHT_LOW = 27.5;
+    public static final double DELTA_TARGET_HEIGHT = 28;
 	
     private static final double MAX_SPEED = 60;
     private static final double CYCLE_TIME = 0.02;
@@ -115,7 +119,6 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput {
     public void set(double value) {
 //    	System.out.println(value);
     	elevatorMotor.set(ControlMode.PercentOutput, value);
-    	safetyHelper.feed();
     }
 
     public void reset() {
@@ -161,7 +164,7 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput {
     
     @Override
     public void pidWrite(double value) {
-        elevatorMotor.set(value);
+        elevatorMotor.set(ControlMode.PercentOutput, value);
     }
 
     @Override
@@ -179,46 +182,4 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput {
         return pidType;
     }
 
-	@Override
-	public void setExpiration(double timeout) {
-		// TODO Auto-generated method stub
-		safetyHelper.setExpiration(timeout);
-	}
-
-	@Override
-	public double getExpiration() {
-		// TODO Auto-generated method stub
-		return safetyHelper.getExpiration();
-	}
-
-	@Override
-	public boolean isAlive() {
-		// TODO Auto-generated method stub
-		return safetyHelper.isAlive();
-	}
-
-	@Override
-	public void stopMotor() {
-		// TODO Auto-generated method stub
-		elevatorMotor.stopMotor();
-		safetyHelper.feed();
-	}
-
-	@Override
-	public void setSafetyEnabled(boolean enabled) {
-		// TODO Auto-generated method stub
-		safetyHelper.setSafetyEnabled(enabled);
-	}
-
-	@Override
-	public boolean isSafetyEnabled() {
-		// TODO Auto-generated method stub
-		return safetyHelper.isSafetyEnabled();
-	}
-
-	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return "Elevator";
-	}
 }

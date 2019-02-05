@@ -20,8 +20,8 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 	private static final boolean lastOntarget = false;
 	private boolean started = false;
 	private static final boolean debug = true;
-	private static final double P = 0.25;
-	private static final double I = 0.002;
+	private static final double P = 0.05;
+	private static final double I = 0.01;
 	private static final double D = 0.0;
 	private static final double TOL = 0.05;
 	private static final double intime = 0.025;

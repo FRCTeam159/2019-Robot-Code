@@ -27,6 +27,9 @@ public interface RobotMap {
   // These are button IDs
   public static final int LEFT_JOYSTICK = 1;
   public static final int RIGHT_JOYSTICK = 4;
+  public static final int LEFT_TRIGGER = 2;
+  public static final int RIGHT_TRIGGER = 3;
+  public static final int RESET_ELEVATOR_BUTTON = 5;
   // General Constants
   public static final int TIMEOUT = 10;
   public static final int ENCODER_TIMEOUT = 10;
