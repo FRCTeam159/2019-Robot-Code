@@ -52,9 +52,6 @@ public class ElevatorCommands extends Command {
         if(goingToTop && Robot.elevator.getPosition() > Elevator.MAX_HEIGHT - Elevator.MOVE_RATE) {
         	goingToTop = false;
         }
-        if(goingToSwitch && Robot.elevator.getPosition() > Elevator.SWITCH_HEIGHT - Elevator.MOVE_RATE && Robot.elevator.getPosition() < Elevator.SWITCH_HEIGHT + Elevator.MOVE_RATE) {
-        	goingToSwitch = false;
-        }
         
         if (leftStick > 0) {
             decrementElevatorPosition(leftStick);

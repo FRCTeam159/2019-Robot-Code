@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANEncoder;
+import frc.robot.subsystems.SparkMotor;
 
 /**
  * Add your docs here.
@@ -22,14 +23,15 @@ import com.revrobotics.CANEncoder;
 public class DriveTrain extends Subsystem implements RobotMap {
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
-	private Motor frontLeft;
-	private Motor frontRight;
-	private Motor backLeft;
-	private Motor backRight;
+	private SparkMotor frontLeft;
+	private SparkMotor frontRight;
+	private SparkMotor backLeft;
+	private SparkMotor backRight;
 	private static final double WHEEL_DIAMETER = 8; // in// 8 in wheels on 2019bot
 	private static final double WHEEL_FEET_PER_REV = Math.PI * 8 / 12;
 	private static final double MEASURED_FEET_PER_REV = 10/18.8;
 	private static final double GEAR_RATIO = WHEEL_FEET_PER_REV / MEASURED_FEET_PER_REV;
+	private static final double INCHES_PER_REV = MEASURED_FEET_PER_REV*12;
 	private ADXRS450_Gyro gyro;
 	@Override
 	public void initDefaultCommand() {
@@ -38,11 +40,12 @@ public class DriveTrain extends Subsystem implements RobotMap {
 	}
 
 	public DriveTrain() {
-		frontLeft = new Motor(FRONT_LEFT);
-		frontRight = new Motor(FRONT_RIGHT);
-		backLeft = new Motor(BACK_LEFT);
-		backRight = new Motor(BACK_RIGHT);
+		frontLeft = new SparkMotor(FRONT_LEFT);
+		frontRight = new SparkMotor(FRONT_RIGHT);
+		backLeft = new SparkMotor(BACK_LEFT);
+		backRight = new SparkMotor(BACK_RIGHT);
 		gyro = new ADXRS450_Gyro();
+
 		System.out.println("Gear ratio is: " + GEAR_RATIO);
 	
 	
@@ -126,14 +129,14 @@ public class DriveTrain extends Subsystem implements RobotMap {
 	}
 	// both return values in feet, number of rotations are averaged between the two motors for each side.
 	public double getRightDistance() {
-	double rightPosition = backRight.getPosition() + frontRight.getPosition();
-	return -rightPosition/2;
+	double rightPosition = backRight.getRotations() + frontRight.getRotations();
+	return -INCHES_PER_REV * rightPosition/2;
 		//	return frontRight.getSensorCollection().getQuadraturePosition() / TICKS_PER_FOOT;
 	}
 
 	public double getLeftDistance() {
-		double leftPosition = backLeft.getPosition() + frontLeft.getPosition();
-		return leftPosition/2;
+		double leftPosition = backLeft.getRotations() + frontLeft.getRotations();
+		return INCHES_PER_REV * leftPosition/2;
 	
 		//	return -backLeft.getSensorCollection().getQuadraturePosition() / TICKS_PER_FOOT;
 	}
@@ -149,21 +152,5 @@ public class DriveTrain extends Subsystem implements RobotMap {
 	}
 	public double getHeading() {
 		return gyro.getAngle();
-	}
-	class Motor extends CANSparkMax{
-		private CANEncoder encoder;
-		private double zeroValue = 0;
-		Motor(int id){
-			super(id, CANSparkMaxLowLevel.MotorType.kBrushless);
-			encoder = getEncoder();
-			zeroValue = encoder.getPosition();
-		}
-		public double getPosition() {
-			double position = encoder.getPosition();
-			return 12 * MEASURED_FEET_PER_REV * (position - zeroValue);
-		}
-		public void reset(){
-			zeroValue = encoder.getPosition();
-		}
 	}
 }

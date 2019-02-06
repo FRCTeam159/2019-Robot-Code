@@ -4,7 +4,21 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
+/* TODO
+Elevator
+  Test Quad encoder on elevator
+  Test limit switches
+  Calibrate Elevator position based on input
+  Redefine setpoints 
+  Control Elevator tilt
+  Check elevator commands for relevancy
+  remap buttons
+Grabber
+  open and close grabber
+  Find out grabber functions
+  eject cargo
+  place hatches
+*/
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
