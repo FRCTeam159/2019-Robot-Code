@@ -22,6 +22,7 @@ public interface RobotMap {
   public static final int BACK_RIGHT = 1;
   public static final int ELEVATOR_MOTOR = 5;
   public static final int GRABBER_MOTOR = 6;
+  public static final int CLIMBER_MOTOR = 7;
   // Piston IDs
   public static final int GRABBER_PISTON_ID = 0;
   public static final int ELEVATOR_PISTON_ID = 1;
