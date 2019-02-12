@@ -27,6 +27,7 @@ public class Grabber extends Subsystem {
       RobotMap.PISTON_REVERSE);;
   private double ejectValue = 0.5;
   private double grabValue = -0.5;
+  private boolean clawOpen = true;
     
 
   // Put methods for controlling this subsystem
@@ -36,11 +37,18 @@ public class Grabber extends Subsystem {
   public void initDefaultCommand() {
     setDefaultCommand(new GrabberCommands());
   }
+
+  public boolean isClawOpen(){
+    return clawOpen;
+  }
+
   public void closeClaw(){
     grabPneumatic.set(DoubleSolenoid.Value.kReverse);
+    clawOpen = false;
   }
   public void openClaw(){
    grabPneumatic.set(DoubleSolenoid.Value.kForward);
+   clawOpen = true;
   }
   public void eject(){
     grabberMotor.set(ControlMode.PercentOutput, ejectValue);

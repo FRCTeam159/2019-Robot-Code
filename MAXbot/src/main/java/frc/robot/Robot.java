@@ -21,6 +21,7 @@ Grabber
 */
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -28,9 +29,11 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Autonomous;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 //import frc.robot.subsystems.VisionProcess;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Grabber;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,10 +43,13 @@ import frc.robot.subsystems.Elevator;
  * project.
  */
 public class Robot extends TimedRobot implements RobotMap {
-  public static DriveTrain m_drivetrain = new DriveTrain();
+  public static DriveTrain drivetrain = new DriveTrain();
   public static OI m_oi;
   public static Elevator elevator = new Elevator();
+  public static Grabber grabber = new Grabber();
+  public static Climber climber = new Climber();
   public static final double MAX_ELEVATOR_CURRENT = 40;
+  Compressor compressor1  = new Compressor();
 //  public static Cameras m_cameras = new Cameras();
 
   Command m_autonomousCommand;
@@ -62,6 +68,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void robotInit() {
     m_oi = new OI();
+    compressor1.start();
    /* vision = new VisionProcess();
     vision.init();
     vision.start();
@@ -114,6 +121,7 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void autonomousInit() {
     getDashboardData();
+    compressor1.start();
     robotPosition = getPosition();
     CommandGroup autonomousCommand = new Autonomous();
     autonomousCommand.start();
@@ -131,7 +139,8 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void teleopInit() {
-    m_drivetrain.reset();
+  drivetrain.reset();
+    compressor1.start();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

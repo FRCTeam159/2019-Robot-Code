@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.OI;
+import frc.robot.subsystems.DriveTrain;
 
 /**
  * An example command.  You can replace me with your own command.
@@ -29,7 +30,7 @@ public class DriveWithGamepad extends Command implements RobotMap{
   boolean Debug = false;
   public DriveWithGamepad() {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.m_drivetrain);
+    requires(Robot.drivetrain);
   }
 
   // Called just before this Command runs the first time
@@ -40,11 +41,17 @@ public class DriveWithGamepad extends Command implements RobotMap{
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Joystick stick = OI.driverController;
+    Joystick stick = OI.stick;
     double zs=-stick.getRawAxis(RobotMap.LEFT_JOYSTICK);
     double xs=stick.getRawAxis(RobotMap.RIGHT_JOYSTICK);
     double z = zs;
     double x = xs;
+    if (stick.getRawButton(RobotMap.GEAR_BUTTON)) {
+      if (Robot.drivetrain.inLowGear())
+        Robot.drivetrain.setHighGear();
+      else
+        Robot.drivetrain.setLowGear();
+    }
     if (useDeadband){
        z = quadDeadband(zMinT, zMinO, zs);
        x = quadDeadband(xMinT, xMinO, xs);
@@ -66,7 +73,7 @@ public class DriveWithGamepad extends Command implements RobotMap{
     }
 
     turnValue *= Math.abs(moveValue) * (1 - turnScale) + turnScale;
-    Robot.m_drivetrain.arcadeDrive(moveValue, turnValue);
+    Robot.drivetrain.arcadeDrive(moveValue, turnValue);
   }
 
   // Make this return true when this Command no longer needs to run execute()

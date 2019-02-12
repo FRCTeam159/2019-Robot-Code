@@ -31,7 +31,7 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 		this.distance = distance;
 		pid = new PIDController(P, I, D, this, this);
 		pid.setAbsoluteTolerance(TOL);
-		requires(Robot.m_drivetrain);
+		requires(Robot.drivetrain);
 	}
 
 //	 Called just before this Command runs the first time
@@ -40,8 +40,8 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 		pid.reset();
 		pid.setSetpoint(distance);
 		pid.disable();
-		Robot.m_drivetrain.enable();
-		Robot.m_drivetrain.reset();
+		Robot.drivetrain.enable();
+		Robot.drivetrain.reset();
 		started = false;
 		timer.start();
 
@@ -67,7 +67,7 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 
 //	 Called once after isFinished returns true
 	protected void end() {
-		Robot.m_drivetrain.disable();
+		Robot.drivetrain.disable();
 		pid.disable();
 		started = false;
 		
@@ -96,15 +96,15 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 		}
 		if (debug) {
 			double time = timer.get();
-			System.out.printf("time=%f leftDistance=%g rightDistance=%g distance=%g\n", time * 1000, Robot.m_drivetrain.getLeftDistance(), Robot.m_drivetrain.getRightDistance(), Robot.m_drivetrain.getDistance());
+			System.out.printf("time=%f leftDistance=%g rightDistance=%g distance=%g\n", time * 1000, Robot.drivetrain.getLeftDistance(), Robot.drivetrain.getRightDistance(), Robot.drivetrain.getDistance());
 		}
-		return Robot.m_drivetrain.getDistance();
+		return Robot.drivetrain.getDistance();
 	}
 
 	@Override
 	public void pidWrite(double output) {
 		if (started) {
-			Robot.m_drivetrain.setRaw(output, output);
+			Robot.drivetrain.setRaw(output, output);
 		}
 	}
 	

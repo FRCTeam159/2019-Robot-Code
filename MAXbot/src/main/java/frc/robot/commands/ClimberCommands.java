@@ -13,67 +13,26 @@ import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
-public class GrabberCommands extends Command implements RobotMap{
-  edu.wpi.first.wpilibj.Timer timer = new edu.wpi.first.wpilibj.Timer();
-
-  static final int UNINITIALIZED = 0;
-  static final int ARMS_OPEN = 1;
-  static final int GRABBER_UPRIGHT = 2;
-  int state = UNINITIALIZED;
-
-  public GrabberCommands() {
+public class ClimberCommands extends Command implements RobotMap{
+  public ClimberCommands() {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.grabber);
+  requires(Robot.climber);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    timer.start();
-    timer.reset();
-    Robot.grabber.openClaw();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    switch (state) {
-    case UNINITIALIZED:
-      if (timer.get() > 0.5){
-        state = ARMS_OPEN;
-        Robot.grabber.dropGrabber();
-        timer.reset();
-      }
-      break;
-    case ARMS_OPEN:
-      if (timer.get() > 0.75)
-        state = GRABBER_UPRIGHT;
-      else
-        Robot.grabber.dropGrabber();
-      break;
-    case GRABBER_UPRIGHT:
-      manualOperate();
-      break;
-    }
-  }
-
-  void manualOperate() {
     Joystick stick = OI.stick;
-
-    boolean intakeButtonPressed = stick.getRawButton(INTAKE_BUTTON);
-    boolean outputButtonPressed = stick.getRawButton(OUTPUT_BUTTON);
-    boolean toggleButtonPressed = stick.getRawButton(ARMS_TOGGLE_BUTTON);
-    if (intakeButtonPressed)
-      Robot.grabber.grab();
-    else if (outputButtonPressed)
-      Robot.grabber.eject();
-    else 
-      Robot.grabber.hold();
-    if (toggleButtonPressed){
-      if (Robot.grabber.isClawOpen())
-        Robot.grabber.closeClaw();
-      else 
-        Robot.grabber.openClaw();
+    boolean isClimberButtonPressed = stick.getRawButton(CLIMB_BUTTON);
+    if(isClimberButtonPressed){
+      Robot.climber.setClimbValue();
+    } else{
+      Robot.climber.setZeroValue();
     }
   }
 
@@ -93,5 +52,4 @@ public class GrabberCommands extends Command implements RobotMap{
   @Override
   protected void interrupted() {
   }
-
 }

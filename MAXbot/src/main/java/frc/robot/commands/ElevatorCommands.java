@@ -11,104 +11,97 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class ElevatorCommands extends Command {
-    
+public class ElevatorCommands extends Command implements RobotMap{
+
     private boolean goingToBottom = false;
     private boolean goingToTop = false;
     private boolean goingToSwitch = false;
+    private final int UNINITIALIZED = 0;
+    private final int ELEVATOR_UPRIGHT = 1;
+    private final int ELEVATOR_AT_ZERO = 2;
+    private final int ELEVATOR_INITIALIZED = 3;
+    private final int ELEVATOR_AT_TARGET = 4;
+    private int state = UNINITIALIZED;
+    private double setPoint = 0;
+    edu.wpi.first.wpilibj.Timer timer = new edu.wpi.first.wpilibj.Timer();
 
     public ElevatorCommands() {
-//		 Use requires() here to declare subsystem dependencies eg. requires(chassis);
+        // Use requires() here to declare subsystem dependencies eg. requires(chassis);
         requires(Robot.elevator);
     }
 
-    //	 Called just before this Command runs the first time
+    // Called just before this Command runs the first time
     protected void initialize() {
-//        Robot.elevator.setElevatorTarget(0);
+        // Robot.elevator.setElevatorTarget(0);
         Robot.elevator.enable();
         printInitializeMessage();
+        state = UNINITIALIZED;
+        timer.start();
+        timer.reset();
+        Robot.elevator.tiltElevator();
+
     }
 
-    //	 Called repeatedly when this Command is scheduled to run
+    // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        Joystick stick = OI.driverController;
-        //TODO square stick inputs?
-        double leftStick = stick.getRawAxis(RobotMap.LEFT_TRIGGER);
-        double rightStick = stick.getRawAxis(RobotMap.RIGHT_TRIGGER);
-        
-        boolean goToZeroPressed = stick.getRawButton(RobotMap.RESET_ELEVATOR_BUTTON);
-        
-        if (goToZeroPressed) {
-            Robot.elevator.setElevatorTarget(0);
-            goingToBottom = true;
-        }
-//        if(OI.elevatorGoToTopButton.get()) {
-//        	Robot.elevator.setElevatorTarget(Elevator.MAX_HEIGHT);
-//        	goingToTop = true;
-//        }
-        if(goingToBottom && Robot.elevator.getPosition() < Elevator.MOVE_RATE) {
-        	goingToBottom = false;
-        }
-        if(goingToTop && Robot.elevator.getPosition() > Elevator.MAX_HEIGHT - Elevator.MOVE_RATE) {
-        	goingToTop = false;
-        }
-        
-        if (leftStick > 0) {
-            decrementElevatorPosition(leftStick);
-        }
-        if (rightStick > 0) {
-            incrementElevatorPosition(rightStick);
+        switch (state) {
+        case UNINITIALIZED:
+            double tm = timer.get();
+            if (tm > 1.0) {
+                state = ELEVATOR_UPRIGHT;
+            }
+            break;
+        case ELEVATOR_UPRIGHT:
+            goToZeroLimit();
+            break;
+        case ELEVATOR_AT_ZERO:
+            goToHatchHeight();
+            state = ELEVATOR_INITIALIZED;
+            break;
+        case ELEVATOR_INITIALIZED:
+            manualOperate();
+            break;
         }
     }
 
-    //	 Make this return true when this Command no longer needs to run execute()
+    void manualOperate(){
+        Joystick stick = OI.stick;
+
+        boolean hatchButtonPressed = stick.getRawButton(RESET_ELEVATOR_BUTTON);
+        boolean rightBumperPressed = stick.getRawButton(RIGHT_BUMPER_BUTTON);
+        boolean leftBumperPressed = stick.getRawButton(LEFT_BUMPER_BUTTON);
+        double rightTriggerPressed = stick.getRawAxis(RIGHT_TRIGGER);
+        double leftTriggerPressed = stick.getRawAxis(LEFT_TRIGGER);
+        if (hatchButtonPressed)
+            setPoint = Elevator.CARGO_HATCH_HEIGHT;
+        else if (rightBumperPressed)
+            setPoint += Elevator.DELTA_TARGET_HEIGHT;
+        else if (leftBumperPressed)
+            setPoint -= Elevator.DELTA_TARGET_HEIGHT;
+        else if (rightTriggerPressed > 0)
+            setPoint += Elevator.MOVE_RATE;
+        else if (leftTriggerPressed > 0)
+            setPoint -= Elevator.MOVE_RATE;
+        Robot.elevator.setElevatorTarget(setPoint);
+        setPoint = Robot.elevator.getElevatorTarget();
+    }
+
+    // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         return false;
     }
 
-    //	 Called once after isFinished returns true
+    // Called once after isFinished returns true
     protected void end() {
-//        Robot.elevator.reset();
+        // Robot.elevator.reset();
         printEndMessage();
     }
 
-    //	 Called when another command which requires one or more of the same subsystems is scheduled to run
+    // Called when another command which requires one or more of the same subsystems
+    // is scheduled to run
     protected void interrupted() {
         printInterruptedMessage();
         end();
-    }
-
-    private void incrementElevatorPosition(double value) {
-    	System.out.println("Elevator Current: " + Robot.elevator.getCurrent());
-    	if(Robot.elevator.getCurrent() < Robot.MAX_ELEVATOR_CURRENT) {
-	        double position;
-	        if(goingToBottom || goingToTop || goingToSwitch) {
-	        	position = Robot.elevator.getPosition();
-	        } else {
-	        	position = Robot.elevator.getElevatorTarget();
-	        }
-	        
-	        Robot.elevator.setElevatorTarget(position + (value * Elevator.MOVE_RATE));
-	        goingToBottom = false;
-	        goingToTop = false;
-	        goingToSwitch = false;
-    	} else {
-    		Robot.elevator.setElevatorTarget(Robot.elevator.getPosition());
-    	}
-    }
-
-    private void decrementElevatorPosition(double value) {
-        double position = Robot.elevator.getElevatorTarget();
-        if(goingToBottom || goingToTop || goingToSwitch) {
-        	position = Robot.elevator.getPosition();
-        } else {
-        	position = Robot.elevator.getElevatorTarget();
-        }
-
-        Robot.elevator.setElevatorTarget(position - (value * Elevator.MOVE_RATE));
-        goingToBottom = false;
-        goingToTop = false;
-        goingToSwitch = false;
     }
 
     private void printInitializeMessage() {
@@ -121,5 +114,18 @@ public class ElevatorCommands extends Command {
 
     private void printInterruptedMessage() {
         System.out.println("Elevator.interrupted");
+    }
+
+    public void goToZeroLimit() {
+        Robot.elevator.set(-0.1);
+        if (Robot.elevator.isAtZero()) {
+            state = ELEVATOR_AT_ZERO;
+            setPoint = 0;
+        }
+    }
+
+    public void goToHatchHeight() {
+        Robot.elevator.setElevatorTarget(Elevator.CARGO_HATCH_HEIGHT);
+        setPoint = Robot.elevator.getElevatorTarget();
     }
 }

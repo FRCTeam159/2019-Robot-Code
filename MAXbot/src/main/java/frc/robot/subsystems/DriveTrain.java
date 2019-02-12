@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.commands.DriveWithGamepad;
@@ -29,14 +30,17 @@ public class DriveTrain extends Subsystem implements RobotMap {
 	private SparkMotor backRight;
 	private static final double WHEEL_DIAMETER = 8; // in// 8 in wheels on 2019bot
 	private static final double WHEEL_FEET_PER_REV = Math.PI * 8 / 12;
-	private static final double MEASURED_FEET_PER_REV = 10/18.8;
+	private static final double MEASURED_FEET_PER_REV = 10 / 18.8;
 	private static final double GEAR_RATIO = WHEEL_FEET_PER_REV / MEASURED_FEET_PER_REV;
-	private static final double INCHES_PER_REV = MEASURED_FEET_PER_REV*12;
+	private static final double INCHES_PER_REV = MEASURED_FEET_PER_REV * 12;
 	private ADXRS450_Gyro gyro;
+	private DoubleSolenoid gearPneumatic;
+	public boolean lowGear = false;
+
 	@Override
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
-		 setDefaultCommand(new DriveWithGamepad());
+		setDefaultCommand(new DriveWithGamepad());
 	}
 
 	public DriveTrain() {
@@ -45,11 +49,11 @@ public class DriveTrain extends Subsystem implements RobotMap {
 		backLeft = new SparkMotor(BACK_LEFT);
 		backRight = new SparkMotor(BACK_RIGHT);
 		gyro = new ADXRS450_Gyro();
+		gearPneumatic = new DoubleSolenoid(RobotMap.GEAR_SHIFTER_ID, RobotMap.GEAR_SHIFTER_FORWARD,
+				RobotMap.GEAR_SHIFTER_REVERSE);
 
 		System.out.println("Gear ratio is: " + GEAR_RATIO);
-	
-	
-	
+
 		/*
 		 * frontRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0,
 		 * RobotMap.TIMEOUT);
@@ -113,44 +117,75 @@ public class DriveTrain extends Subsystem implements RobotMap {
 		backRight.reset();
 		frontLeft.reset();
 		frontRight.reset();
+		setLowGear();
 		log();
 
 	}
+
 	public void enable() {
 		log();
 	}
+
 	public void disable() {
 
 	}
+
 	public double getDistance() {
 		double d1 = getRightDistance();
 		double d2 = getLeftDistance();
 		return 0.5 * (d1 + d2);
 	}
-	// both return values in feet, number of rotations are averaged between the two motors for each side.
+
+	// both return values in feet, number of rotations are averaged between the two
+	// motors for each side.
 	public double getRightDistance() {
-	double rightPosition = backRight.getRotations() + frontRight.getRotations();
-	return -INCHES_PER_REV * rightPosition/2;
-		//	return frontRight.getSensorCollection().getQuadraturePosition() / TICKS_PER_FOOT;
+		double rightPosition = backRight.getRotations() + frontRight.getRotations();
+		return -INCHES_PER_REV * rightPosition / 2;
+		// return frontRight.getSensorCollection().getQuadraturePosition() /
+		// TICKS_PER_FOOT;
 	}
 
 	public double getLeftDistance() {
 		double leftPosition = backLeft.getRotations() + frontLeft.getRotations();
-		return INCHES_PER_REV * leftPosition/2;
-	
-		//	return -backLeft.getSensorCollection().getQuadraturePosition() / TICKS_PER_FOOT;
+		return INCHES_PER_REV * leftPosition / 2;
+
+		// return -backLeft.getSensorCollection().getQuadraturePosition() /
+		// TICKS_PER_FOOT;
 	}
+
 	private void log() {
 		SmartDashboard.putNumber("Heading", getHeading());
-	//	SmartDashboard.putNumber("Left wheels", -backLeft.getSensorCollection().getQuadraturePosition());
-	//	SmartDashboard.putNumber("Right wheels", frontRight.getSensorCollection().getQuadraturePosition());
+		// SmartDashboard.putNumber("Left wheels",
+		// -backLeft.getSensorCollection().getQuadraturePosition());
+		// SmartDashboard.putNumber("Right wheels",
+		// frontRight.getSensorCollection().getQuadraturePosition());
 		SmartDashboard.putNumber("Left distance", getLeftDistance());
 		SmartDashboard.putNumber("Right distance", getRightDistance());
-	//	SmartDashboard.putNumber("Velocity", getVelocity());
+		// SmartDashboard.putNumber("Velocity", getVelocity());
 		SmartDashboard.putNumber("Distance", getDistance());
 		// SmartDashboard.putBoolean("Low Gear", inLowGear());
 	}
+
 	public double getHeading() {
 		return gyro.getAngle();
+	}
+
+	public void setHighGear() {
+		if (lowGear) {
+			gearPneumatic.set(DoubleSolenoid.Value.kForward);
+			lowGear = false;
+		}
+	}
+
+	public void setLowGear() {
+		if (!lowGear) {
+			gearPneumatic.set(DoubleSolenoid.Value.kReverse);
+			lowGear = true;
+		}
+	}
+
+	public boolean inLowGear() {
+		return lowGear;
+
 	}
 }

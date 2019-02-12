@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.MotorSafety;
@@ -56,8 +58,8 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput {
     public static final double ROCKET_TOP_BALL_HEIGHT = 2*(DELTA_TARGET_HEIGHT)+ ROCKET_BALL_HEIGHT_LOW;
     public static final double MAX_HEIGHT = ROCKET_TOP_BALL_HEIGHT;
 
-    private static final double MAX_SPEED = 60;
-    private static final double CYCLE_TIME = 0.02;
+    public static final double MAX_SPEED = 60;
+    public static final double CYCLE_TIME = 0.02;
     public static final double MOVE_RATE = CYCLE_TIME * MAX_SPEED;
 
     
@@ -82,6 +84,9 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput {
           pidController = new PIDController(P, I, D, F, this, this, 0.01);
         pidController.setOutputRange(-1.0, 1.0);
         reset();
+        //Code for Hard limit switches for talons
+        elevatorMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed,  10);
+        elevatorMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed,  10);
     }
 
 //	 Put methods for controlling this subsystem here. Call these from Commands.
@@ -121,14 +126,14 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput {
         elevatorMotor.getSensorCollection().setQuadraturePosition(0, RobotMap.ENCODER_TIMEOUT);
     }
     
-    /*public boolean isAtZero() {
+    public boolean isAtZero() {
     	// TODO: implement lower limit switch
     	return	elevatorMotor.getSensorCollection().isRevLimitSwitchClosed(); 
     }
     
     public boolean isAtTop() {
     	return	elevatorMotor.getSensorCollection().isFwdLimitSwitchClosed(); 
-    }*/
+    }
 
     public void enable() {
         pidController.enable();

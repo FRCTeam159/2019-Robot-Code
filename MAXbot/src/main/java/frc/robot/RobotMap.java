@@ -31,6 +31,10 @@ public interface RobotMap {
   //Servo IDs
   public static final int ARM_SERVO = 0;
   public static final double GRABBER_SERVO_VALUE = 0.5;
+  //shifter ID
+  public static final int GEAR_SHIFTER_ID = 0;
+  public static final int GEAR_SHIFTER_FORWARD = 0;
+  public static final int GEAR_SHIFTER_REVERSE = 1;
 
   // Controller IDs
   public static final int DRIVER = 0;
@@ -39,7 +43,14 @@ public interface RobotMap {
   public static final int RIGHT_JOYSTICK = 4;
   public static final int LEFT_TRIGGER = 2;
   public static final int RIGHT_TRIGGER = 3;
-  public static final int RESET_ELEVATOR_BUTTON = 5;
+  public static final int LEFT_BUMPER_BUTTON = 5;
+  public static final int RIGHT_BUMPER_BUTTON = 6;
+  public static final int RESET_ELEVATOR_BUTTON = 2;
+  public static final int INTAKE_BUTTON = 1;
+  public static final int OUTPUT_BUTTON = 3;
+  public static final int ARMS_TOGGLE_BUTTON = 4;
+  public static final int GEAR_BUTTON = 7;
+  public static final int CLIMB_BUTTON = 8;
   // General Constants
   public static final int TIMEOUT = 10;
   public static final int ENCODER_TIMEOUT = 10;
