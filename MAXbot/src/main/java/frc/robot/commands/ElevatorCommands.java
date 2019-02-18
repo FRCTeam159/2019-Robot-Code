@@ -7,23 +7,20 @@ import frc.robot.subsystems.Elevator;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Button;
 
 /**
  *
  */
-public class ElevatorCommands extends Command implements RobotMap{
+public class ElevatorCommands extends Command implements RobotMap {
 
-    private boolean goingToBottom = false;
-    private boolean goingToTop = false;
-    private boolean goingToSwitch = false;
-    private final int UNINITIALIZED = 0;
-    private final int ELEVATOR_UPRIGHT = 1;
-    private final int ELEVATOR_AT_ZERO = 2;
-    private final int ELEVATOR_INITIALIZED = 3;
-    private final int ELEVATOR_AT_TARGET = 4;
-    private int state = UNINITIALIZED;
     private double setPoint = 0;
-    edu.wpi.first.wpilibj.Timer timer = new edu.wpi.first.wpilibj.Timer();
+
+    Button upDeltaButton = new Button(RIGHT_BUMPER_BUTTON);
+    Button downDeltaButton = new Button(LEFT_BUMPER_BUTTON);
+    Button hatchButton = new Button(RESET_ELEVATOR_BUTTON);
+    Button tiltForwardButton = new Button(TILT_FORWARD_BUTTON);
+    Button tiltBackButton =new Button(TILT_BACK_BUTTON);
 
     public ElevatorCommands() {
         // Use requires() here to declare subsystem dependencies eg. requires(chassis);
@@ -32,58 +29,37 @@ public class ElevatorCommands extends Command implements RobotMap{
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        // Robot.elevator.setElevatorTarget(0);
+        System.out.println("ElevatorCommands initialized");
         Robot.elevator.enable();
-        printInitializeMessage();
-        state = UNINITIALIZED;
-        timer.start();
-        timer.reset();
-        Robot.elevator.tiltElevator();
+        // Robot.elevator.setElevatorTarget(0);
 
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        switch (state) {
-        case UNINITIALIZED:
-            double tm = timer.get();
-            if (tm > 1.0) {
-                state = ELEVATOR_UPRIGHT;
-            }
-            break;
-        case ELEVATOR_UPRIGHT:
-            goToZeroLimit();
-            break;
-        case ELEVATOR_AT_ZERO:
-            goToHatchHeight();
-            state = ELEVATOR_INITIALIZED;
-            break;
-        case ELEVATOR_INITIALIZED:
-            manualOperate();
-            break;
-        }
-    }
-
-    void manualOperate(){
         Joystick stick = OI.stick;
-
-        boolean hatchButtonPressed = stick.getRawButton(RESET_ELEVATOR_BUTTON);
-        boolean rightBumperPressed = stick.getRawButton(RIGHT_BUMPER_BUTTON);
-        boolean leftBumperPressed = stick.getRawButton(LEFT_BUMPER_BUTTON);
+       // if(!(Robot.isTele))
+         //   return;
         double rightTriggerPressed = stick.getRawAxis(RIGHT_TRIGGER);
         double leftTriggerPressed = stick.getRawAxis(LEFT_TRIGGER);
-        if (hatchButtonPressed)
+        if (hatchButton.isPressed())
             setPoint = Elevator.CARGO_HATCH_HEIGHT;
-        else if (rightBumperPressed)
+        else if (upDeltaButton.isPressed())
             setPoint += Elevator.DELTA_TARGET_HEIGHT;
-        else if (leftBumperPressed)
+        else if (downDeltaButton.isPressed())
             setPoint -= Elevator.DELTA_TARGET_HEIGHT;
         else if (rightTriggerPressed > 0)
             setPoint += Elevator.MOVE_RATE;
         else if (leftTriggerPressed > 0)
             setPoint -= Elevator.MOVE_RATE;
+        else if (tiltBackButton.isPressed())
+            Robot.elevator.tiltElevator(false);
+        else if (tiltForwardButton.isPressed())
+            Robot.elevator.tiltElevator(true);
+            
         Robot.elevator.setElevatorTarget(setPoint);
         setPoint = Robot.elevator.getElevatorTarget();
+
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -93,39 +69,15 @@ public class ElevatorCommands extends Command implements RobotMap{
 
     // Called once after isFinished returns true
     protected void end() {
+        System.out.println("ElevatorCommands end");
         // Robot.elevator.reset();
-        printEndMessage();
-    }
+        }
 
     // Called when another command which requires one or more of the same subsystems
     // is scheduled to run
     protected void interrupted() {
-        printInterruptedMessage();
+        System.out.println("ElevatorCommands interrupted");
         end();
     }
-
-    private void printInitializeMessage() {
-        System.out.println("Elevator.initialize");
-    }
-
-    private void printEndMessage() {
-        System.out.println("Elevator.end");
-    }
-
-    private void printInterruptedMessage() {
-        System.out.println("Elevator.interrupted");
-    }
-
-    public void goToZeroLimit() {
-        Robot.elevator.set(-0.1);
-        if (Robot.elevator.isAtZero()) {
-            state = ELEVATOR_AT_ZERO;
-            setPoint = 0;
-        }
-    }
-
-    public void goToHatchHeight() {
-        Robot.elevator.setElevatorTarget(Elevator.CARGO_HATCH_HEIGHT);
-        setPoint = Robot.elevator.getElevatorTarget();
-    }
+    
 }

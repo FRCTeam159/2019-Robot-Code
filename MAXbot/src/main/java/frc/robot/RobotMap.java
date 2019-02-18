@@ -20,22 +20,19 @@ public interface RobotMap {
 
   public static final int FRONT_RIGHT = 2;
   public static final int BACK_RIGHT = 1;
-  public static final int ELEVATOR_MOTOR = 5;
-  public static final int GRABBER_MOTOR = 6;
+  public static final int ELEVATOR_MOTOR = 6;
+  public static final int GRABBER_MOTOR = 5;
   public static final int CLIMBER_MOTOR = 7;
-  // Piston IDs
-  public static final int GRABBER_PISTON_ID = 0;
-  public static final int ELEVATOR_PISTON_ID = 1;
-  public static final int PISTON_FORWARD = 2;
-  public static final int PISTON_REVERSE = 3;
+  // Piston IDs  
+  public static final int GEAR_SHIFTER_FORWARD = 0;
+  public static final int GEAR_SHIFTER_REVERSE = 1;
+  public static final int ELEVATOR_PISTON_FORWARD = 2;
+  public static final int ELEVATOR_PISTON_REVERSE = 3;
+  public static final int GRABBER_PISTON_FORWARD = 4;
+  public static final int GRABBER_PISTON_REVERSE = 5;
   //Servo IDs
   public static final int ARM_SERVO = 0;
   public static final double GRABBER_SERVO_VALUE = 0.5;
-  //shifter ID
-  public static final int GEAR_SHIFTER_ID = 0;
-  public static final int GEAR_SHIFTER_FORWARD = 0;
-  public static final int GEAR_SHIFTER_REVERSE = 1;
-
   // Controller IDs
   public static final int DRIVER = 0;
   // These are button IDs
@@ -51,6 +48,8 @@ public interface RobotMap {
   public static final int ARMS_TOGGLE_BUTTON = 4;
   public static final int GEAR_BUTTON = 7;
   public static final int CLIMB_BUTTON = 8;
+  public static final int TILT_BACK_BUTTON = 9;
+  public static final int TILT_FORWARD_BUTTON = 10;
   // General Constants
   public static final int TIMEOUT = 10;
   public static final int ENCODER_TIMEOUT = 10;

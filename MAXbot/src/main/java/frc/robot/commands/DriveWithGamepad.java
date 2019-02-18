@@ -13,11 +13,12 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.OI;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.Button;
 
 /**
- * An example command.  You can replace me with your own command.
+ * An example command. You can replace me with your own command.
  */
-public class DriveWithGamepad extends Command implements RobotMap{
+public class DriveWithGamepad extends Command implements RobotMap {
   double powerScale = 2.1;
   double turnScale = 0.65;
   double moveExponent = 0.75; // Raise moveExponent and turnExponent for more control at lower speeds,
@@ -28,6 +29,8 @@ public class DriveWithGamepad extends Command implements RobotMap{
   double zMinO = 0;
   boolean useDeadband = true;
   boolean Debug = false;
+  Button gearButton = new Button(GEAR_BUTTON);
+
   public DriveWithGamepad() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.drivetrain);
@@ -36,25 +39,28 @@ public class DriveWithGamepad extends Command implements RobotMap{
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    System.out.println("DriveWithGamepad initialized");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if (!Robot.isTele)
+      return;
     Joystick stick = OI.stick;
-    double zs=-stick.getRawAxis(RobotMap.LEFT_JOYSTICK);
-    double xs=stick.getRawAxis(RobotMap.RIGHT_JOYSTICK);
+    double zs = -stick.getRawAxis(LEFT_JOYSTICK);
+    double xs = stick.getRawAxis(RIGHT_JOYSTICK);
     double z = zs;
     double x = xs;
-    if (stick.getRawButton(RobotMap.GEAR_BUTTON)) {
+    if (gearButton.isPressed()) {
       if (Robot.drivetrain.inLowGear())
         Robot.drivetrain.setHighGear();
       else
         Robot.drivetrain.setLowGear();
     }
-    if (useDeadband){
-       z = quadDeadband(zMinT, zMinO, zs);
-       x = quadDeadband(xMinT, xMinO, xs);
+    if (useDeadband) {
+      z = quadDeadband(zMinT, zMinO, zs);
+      x = quadDeadband(xMinT, xMinO, xs);
     }
     double moveAxis = powerScale * z; // left stick - drive
     double turnAxis = powerScale * x; // right stick - rotate
@@ -85,32 +91,31 @@ public class DriveWithGamepad extends Command implements RobotMap{
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    System.out.println("DriveWithGamepad end");
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    System.out.println("DriveWithGamepad interrupted");
   }
-  double quadDeadband(double minThreshold, double minOutput, double input)
-  {
+
+  double quadDeadband(double minThreshold, double minOutput, double input) {
     if (input > minThreshold) {
       return ((((1 - minOutput) // 1 - minOutput/(1-minThreshold)^2 * (input-minThreshold)^2 + minOutput
-          / ((1 - minThreshold)* (1 - minThreshold)))
-          * ((input - minThreshold)* (input - minThreshold)))
+          / ((1 - minThreshold) * (1 - minThreshold))) * ((input - minThreshold) * (input - minThreshold)))
           + minOutput);
     } else {
-      if (input < (- minThreshold)) {
+      if (input < (-minThreshold)) {
         return (((minOutput - 1) // minOutput - 1/(minThreshold - 1)^2 * (minThreshold + input)^2 - minOutput
-            / ((minThreshold - 1)* (minThreshold - 1)))
-            * ((minThreshold + input)* (minThreshold + input)))
+            / ((minThreshold - 1) * (minThreshold - 1))) * ((minThreshold + input) * (minThreshold + input)))
             - minOutput;
       }
-  
+
       else {
         return 0;
       }
     }
   }
 }
-

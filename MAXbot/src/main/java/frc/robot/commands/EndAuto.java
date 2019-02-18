@@ -7,52 +7,44 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
 import frc.robot.Robot;
-import frc.robot.RobotMap;
 
-public class ClimberCommands extends Command implements RobotMap{
-  public ClimberCommands() {
+public class EndAuto extends Command {
+  public EndAuto() {
     // Use requires() here to declare subsystem dependencies
-  requires(Robot.climber);
+    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    System.out.println("ClimberCommands initialized");
+    System.out.println("EndAuto initialized");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Joystick stick = OI.stick;
-    boolean isClimberButtonPressed = stick.getRawButton(CLIMB_BUTTON);
-    if(isClimberButtonPressed){
-      Robot.climber.setClimbValue();
-    } else{
-      Robot.climber.setZeroValue();
-    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return true;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    System.out.println("ClimberCommands end");
+    Robot.isTele = true;
+    Robot.isAuto = false;
+    System.out.println("EndAuto end");
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    System.out.println("ClimberCommands interrupted");
+    System.out.println("EndAuto interrupted");
   }
 }

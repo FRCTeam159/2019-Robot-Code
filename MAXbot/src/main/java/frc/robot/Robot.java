@@ -21,6 +21,8 @@ Grabber
 */
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -47,32 +49,50 @@ public class Robot extends TimedRobot implements RobotMap {
   public static OI m_oi;
   public static Elevator elevator = new Elevator();
   public static Grabber grabber = new Grabber();
-  public static Climber climber = new Climber();
+  public static Climber climber = null;
   public static final double MAX_ELEVATOR_CURRENT = 40;
-  Compressor compressor1  = new Compressor();
-//  public static Cameras m_cameras = new Cameras();
+  Compressor compressor1 = new Compressor();
+  // public static Cameras m_cameras = new Cameras();
 
-  Command m_autonomousCommand;
+  CommandGroup autonomousCommand;
   SendableChooser<Integer> positionChooser = new SendableChooser<>();
   public static boolean useGyro = false;
   public static boolean calibrate = false;
   public static int robotPosition = CENTER_POSITION;
   public static boolean publishPath = false;
-
+  public static boolean isAuto = false;
+  public static boolean isTele = false;
+  public static boolean doAuto = false;
+  public static boolean haveAuto = false;
+  public static boolean haveClimber = false;
+  static UsbCamera camera1;
+  static UsbCamera camera2;
+  public static int imageWidth = 320;
+  public static int imageHeight = 240;
+  static int FPS = 30;
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
- // VisionProcess vision;
+  // VisionProcess vision;
 
   @Override
   public void robotInit() {
+    if(haveClimber)
+      climber = new Climber();
     m_oi = new OI();
     compressor1.start();
-   /* vision = new VisionProcess();
-    vision.init();
-    vision.start();
-    */
+    camera1 = CameraServer.getInstance().startAutomaticCapture("Camera1", 0);
+    camera1.setFPS(FPS);
+    camera1.setResolution((int) imageWidth, (int) imageHeight);
+    //camera2 = CameraServer.getInstance().startAutomaticCapture("Camera2", 0);
+    //camera2.setFPS(FPS);
+    //camera2.setResolution((int) imageWidth, (int) imageHeight);
+
+    autonomousCommand = new Autonomous();
+    /*
+     * vision = new VisionProcess(); vision.init(); vision.start();
+     */
     putValuesOnSmartDashboard();
     // m_chooser.addDefault("Default Auto", new ExampleCommand());
     // chooser.addObject("My Auto", new MyAutoCommand());
@@ -120,12 +140,21 @@ public class Robot extends TimedRobot implements RobotMap {
    */
   @Override
   public void autonomousInit() {
+    // if(doAuto){
+    // isAuto = true;
+    // isTele = false;
+    // }
+    // else{
+    // isAuto = false;
+    // isTele = true;
+    // }
+    isAuto = false;
+    isTele = true;
     getDashboardData();
     compressor1.start();
     robotPosition = getPosition();
-    CommandGroup autonomousCommand = new Autonomous();
-    autonomousCommand.start();
- 
+
+    //autonomousCommand.start();
 
   }
 
@@ -139,14 +168,16 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void teleopInit() {
-  drivetrain.reset();
+    isAuto = false;
+    isTele = true;
+    drivetrain.reset();
     compressor1.start();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
     }
   }
 
@@ -168,33 +199,35 @@ public class Robot extends TimedRobot implements RobotMap {
   private int getPosition() {
     return positionChooser.getSelected();
   }
+
   private void putValuesOnSmartDashboard() {
-    positionChooser.addObject("Left", 0);
-    positionChooser.addDefault("Center", 1);
-    positionChooser.addObject("Right", 2);
-    SmartDashboard.putData("Position", positionChooser);
-    SmartDashboard.putNumber("MAX_VEL", PhysicalConstants.MAX_VEL);
-    SmartDashboard.putNumber("MAX_ACC", PhysicalConstants.MAX_ACC);
-    SmartDashboard.putNumber("MAX_JRK", PhysicalConstants.MAX_JRK);
-    SmartDashboard.putNumber("KP", PhysicalConstants.KP);
-    SmartDashboard.putNumber("GFACT", PhysicalConstants.GFACT);
-    SmartDashboard.putBoolean("Use Gyro", useGyro);
-    SmartDashboard.putString("Target", "Calculating");
-    SmartDashboard.putBoolean("Calibrate", calibrate);
-    SmartDashboard.putBoolean("Publish Path", publishPath);
+    if (haveAuto) {
+      positionChooser.addObject("Left", 0);
+      positionChooser.addDefault("Center", 1);
+      positionChooser.addObject("Right", 2);
+      SmartDashboard.putData("Position", positionChooser);
+      SmartDashboard.putNumber("MAX_VEL", PhysicalConstants.MAX_VEL);
+      SmartDashboard.putNumber("MAX_ACC", PhysicalConstants.MAX_ACC);
+      SmartDashboard.putNumber("MAX_JRK", PhysicalConstants.MAX_JRK);
+      SmartDashboard.putNumber("KP", PhysicalConstants.KP);
+      SmartDashboard.putNumber("GFACT", PhysicalConstants.GFACT);
+      SmartDashboard.putBoolean("Use Gyro", useGyro);
+      SmartDashboard.putString("Target", "Calculating");
+      SmartDashboard.putBoolean("Calibrate", calibrate);
+      SmartDashboard.putBoolean("Publish Path", publishPath);
+    }
   }
 
   void getDashboardData() {
-    useGyro = SmartDashboard.getBoolean("Use Gyro", useGyro);
-    PhysicalConstants.MAX_VEL = SmartDashboard.getNumber("MAX_VEL", PhysicalConstants.MAX_VEL);
-    PhysicalConstants.MAX_ACC = SmartDashboard.getNumber("MAX_ACC", PhysicalConstants.MAX_ACC);
-    PhysicalConstants.MAX_JRK = SmartDashboard.getNumber("MAX_JRK", PhysicalConstants.MAX_JRK);
-    PhysicalConstants.GFACT = SmartDashboard.getNumber("GFACT", PhysicalConstants.GFACT);
-    PhysicalConstants.KP = SmartDashboard.getNumber("KP", PhysicalConstants.KP);
-    calibrate = SmartDashboard.getBoolean("Calibrate", calibrate);
-    publishPath = SmartDashboard.getBoolean("Publish Path", publishPath);
-
+    if (haveAuto) {
+      useGyro = SmartDashboard.getBoolean("Use Gyro", useGyro);
+      PhysicalConstants.MAX_VEL = SmartDashboard.getNumber("MAX_VEL", PhysicalConstants.MAX_VEL);
+      PhysicalConstants.MAX_ACC = SmartDashboard.getNumber("MAX_ACC", PhysicalConstants.MAX_ACC);
+      PhysicalConstants.MAX_JRK = SmartDashboard.getNumber("MAX_JRK", PhysicalConstants.MAX_JRK);
+      PhysicalConstants.GFACT = SmartDashboard.getNumber("GFACT", PhysicalConstants.GFACT);
+      PhysicalConstants.KP = SmartDashboard.getNumber("KP", PhysicalConstants.KP);
+      calibrate = SmartDashboard.getBoolean("Calibrate", calibrate);
+      publishPath = SmartDashboard.getBoolean("Publish Path", publishPath);
+    }
   }
-
 }
-

@@ -7,52 +7,70 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
 import frc.robot.Robot;
-import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.Timer;
 
-public class ClimberCommands extends Command implements RobotMap{
-  public ClimberCommands() {
+public class InitGrabber extends Command {
+  Timer timer = new Timer();
+  static final int UNINITIALIZED = 0;
+  static final int ARMS_OPEN = 1;
+  static final int GRABBER_UPRIGHT = 2;
+  int state = UNINITIALIZED;
+  boolean done = false;
+  public InitGrabber() {
     // Use requires() here to declare subsystem dependencies
-  requires(Robot.climber);
+    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    System.out.println("ClimberCommands initialized");
+    System.out.println("InitGrabber inizialized");
+    timer.start();
+    timer.reset();
+    Robot.grabber.openClaw();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Joystick stick = OI.stick;
-    boolean isClimberButtonPressed = stick.getRawButton(CLIMB_BUTTON);
-    if(isClimberButtonPressed){
-      Robot.climber.setClimbValue();
-    } else{
-      Robot.climber.setZeroValue();
-    }
+    switch (state) {
+      case UNINITIALIZED:
+        if (timer.get() > 0.5){
+          state = ARMS_OPEN;
+          Robot.grabber.dropGrabber(true);
+          timer.reset();
+        }
+        break;
+      case ARMS_OPEN:
+        if (timer.get() > 0.75)
+          state = GRABBER_UPRIGHT;
+        else
+          Robot.grabber.dropGrabber(true);
+        break;
+      case GRABBER_UPRIGHT:
+        done = true;
+        break;
+      }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return done;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    System.out.println("ClimberCommands end");
+    System.out.println("InitGrabber end");
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    System.out.println("ClimberCommands interrupted");
+    System.out.println("InitGrabber interrupted");
   }
 }

@@ -7,19 +7,27 @@
 
 package frc.robot.commands;
 
+import javax.lang.model.util.ElementScanner6;
+
 import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.Button;
+import edu.wpi.first.wpilibj.Timer;
 
-public class GrabberCommands extends Command implements RobotMap{
-  edu.wpi.first.wpilibj.Timer timer = new edu.wpi.first.wpilibj.Timer();
-
-  static final int UNINITIALIZED = 0;
-  static final int ARMS_OPEN = 1;
-  static final int GRABBER_UPRIGHT = 2;
-  int state = UNINITIALIZED;
+public class GrabberCommands extends Command implements RobotMap {
+  Timer timer = new Timer();
+  Button toggleGrabber = new Button(ARMS_TOGGLE_BUTTON);
+  Button tiltForwardButton = new Button(TILT_FORWARD_BUTTON);
+  Button tiltBackButton = new Button(TILT_BACK_BUTTON);
+  static final int NOT_TILTING = 0;
+  static final int TILTING_UP = 1;
+  static final int TILTING_DOWN = 2;
+  int tilting = NOT_TILTING;
+  static final double tiltTime = 0.1; // seconds
 
   public GrabberCommands() {
     // Use requires() here to declare subsystem dependencies
@@ -30,50 +38,55 @@ public class GrabberCommands extends Command implements RobotMap{
   @Override
   protected void initialize() {
     timer.start();
-    timer.reset();
-    Robot.grabber.openClaw();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    switch (state) {
-    case UNINITIALIZED:
-      if (timer.get() > 0.5){
-        state = ARMS_OPEN;
-        Robot.grabber.dropGrabber();
-        timer.reset();
-      }
-      break;
-    case ARMS_OPEN:
-      if (timer.get() > 0.75)
-        state = GRABBER_UPRIGHT;
-      else
-        Robot.grabber.dropGrabber();
-      break;
-    case GRABBER_UPRIGHT:
-      manualOperate();
-      break;
-    }
-  }
-
-  void manualOperate() {
+    if (!(Robot.isTele))
+      return;
     Joystick stick = OI.stick;
-
     boolean intakeButtonPressed = stick.getRawButton(INTAKE_BUTTON);
     boolean outputButtonPressed = stick.getRawButton(OUTPUT_BUTTON);
-    boolean toggleButtonPressed = stick.getRawButton(ARMS_TOGGLE_BUTTON);
     if (intakeButtonPressed)
       Robot.grabber.grab();
     else if (outputButtonPressed)
       Robot.grabber.eject();
-    else 
+    else
       Robot.grabber.hold();
-    if (toggleButtonPressed){
+    if (toggleGrabber.isPressed()) {
       if (Robot.grabber.isClawOpen())
         Robot.grabber.closeClaw();
-      else 
+      else
         Robot.grabber.openClaw();
+    }
+    if (tiltForwardButton.isPressed()) {
+      tilting = TILTING_UP;
+      timer.reset();
+    } else if (tiltBackButton.isPressed()) {
+      tilting = TILTING_DOWN;
+      timer.reset();
+    }
+    manageTilt();
+  }
+
+  void manageTilt() {
+    switch (tilting) {
+    case NOT_TILTING:
+      Robot.grabber.disableTilting();
+      break;
+    case TILTING_UP:
+      if (timer.get() < tiltTime)
+        Robot.grabber.dropGrabber(true);
+      else
+        tilting = NOT_TILTING;
+      break;
+    case TILTING_DOWN:
+      if (timer.get() < tiltTime)
+        Robot.grabber.dropGrabber(false);
+      else
+        tilting = NOT_TILTING;
+      break;
     }
   }
 

@@ -5,22 +5,28 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import frc.robot.OI;
 
-public class Autonomous extends CommandGroup {
+/**
+ * Add your docs here.
+ */
+public class Button {
+    int id = 0;
+    boolean released = true;
 
-  /**
-   * Add your docs here.
-   */
-  public Autonomous() {
-    addParallel(new InitElevator());
-    addSequential(new InitGrabber());
-    addSequential(new EndAuto());
-    //addSequential(new DriveToTarget(24.0));
-    //addSequential(new DriveStraight(5));
-    //addSequential(new DrivePath(5, 3));
-    //addSequential(new DrivePath(5, 0));
-  }
+    public Button(int n) {
+        id = n;
+    }
+
+    public boolean isPressed() {
+        if (released && OI.stick.getRawButton(id)) {
+            released = false;
+            return true;
+        } else if (!(OI.stick.getRawButton(id))) {
+            released = true;
+        }
+        return false;
+    }
 }

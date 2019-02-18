@@ -20,11 +20,11 @@ import frc.robot.commands.GrabberCommands;
 /**
  * Add your docs here.
  */
-public class Grabber extends Subsystem {
+public class Grabber extends Subsystem implements RobotMap {
   private Servo armMover = new Servo(RobotMap.ARM_SERVO);
   private TalonSRX grabberMotor = new TalonSRX(RobotMap.GRABBER_MOTOR);;
-  private DoubleSolenoid grabPneumatic = new DoubleSolenoid(RobotMap.GRABBER_PISTON_ID, RobotMap.PISTON_FORWARD,
-      RobotMap.PISTON_REVERSE);;
+  private DoubleSolenoid grabPneumatic = new DoubleSolenoid(GRABBER_PISTON_FORWARD,
+      GRABBER_PISTON_REVERSE);
   private double ejectValue = 0.5;
   private double grabValue = -0.5;
   private boolean clawOpen = true;
@@ -60,7 +60,14 @@ public class Grabber extends Subsystem {
     grabberMotor.set(ControlMode.PercentOutput, 0);
 
   }
-  public void dropGrabber(){
-    armMover.set(RobotMap.GRABBER_SERVO_VALUE);
+  public void dropGrabber(boolean forward){
+    if(forward)
+      armMover.set(RobotMap.GRABBER_SERVO_VALUE);
+    else
+      armMover.set(-RobotMap.GRABBER_SERVO_VALUE);
+  }
+  public void disableTilting(){
+    armMover.set(0);
+
   }
 }

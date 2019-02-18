@@ -10,19 +10,23 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap;
 import frc.robot.commands.ClimberCommands;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxFrames;
 
 /**
  * Add your docs here.
  */
-public class Climber extends Subsystem {
-  private TalonSRX climberMotor;
+public class Climber extends Subsystem implements RobotMap {
+  private CANSparkMax climberMotor;
   private double climbValue = 0.2;
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
   public Climber(){
-    climberMotor = new TalonSRX(CLIMBER_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
+    climberMotor = new CANSparkMax(CLIMBER_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
   }
 
   @Override
