@@ -15,12 +15,13 @@ public class Autonomous extends CommandGroup {
    * Add your docs here.
    */
   public Autonomous() {
-    addParallel(new InitElevator());
     addSequential(new InitGrabber());
+    addSequential(new DriveStraight(96));
+    addSequential(new InitElevator());
     addSequential(new EndAuto());
-    //addSequential(new DriveToTarget(24.0));
-    //addSequential(new DriveStraight(5));
-    //addSequential(new DrivePath(5, 3));
-    //addSequential(new DrivePath(5, 0));
+    // addSequential(new DriveToTarget(24.0));
+    // addSequential(new DriveStraight(5));
+    // addSequential(new DrivePath(5, 3));
+    // addSequential(new DrivePath(5, 0));
   }
 }

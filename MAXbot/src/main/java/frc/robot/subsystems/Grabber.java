@@ -60,11 +60,10 @@ public class Grabber extends Subsystem implements RobotMap {
     grabberMotor.set(ControlMode.PercentOutput, 0);
 
   }
-  public void dropGrabber(boolean forward){
-    if(forward)
+  public void dropGrabber(){
+  
       armMover.set(RobotMap.GRABBER_SERVO_VALUE);
-    else
-      armMover.set(-RobotMap.GRABBER_SERVO_VALUE);
+
   }
   public void disableTilting(){
     armMover.set(0);

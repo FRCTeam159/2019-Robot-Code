@@ -34,7 +34,8 @@ public class InitElevator extends Command {
     timer.reset();
     Robot.elevator.enable();
     System.out.println("InitElevator initialized");
-    Robot.elevator.tiltElevator(true);
+    goToHatchHeight();
+    // Robot.elevator.tiltElevator(true);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -44,18 +45,18 @@ public class InitElevator extends Command {
     case UNINITIALIZED:
       double tm = timer.get();
       if (tm > 1.0) {
-        state = ELEVATOR_UPRIGHT;
+        timer.reset();
+        state = ELEVATOR_AT_TARGET;
+        Robot.elevator.tiltElevator(true);
       }
       break;
-    case ELEVATOR_UPRIGHT:
-      goToZeroLimit();
-      break;
-    case ELEVATOR_AT_ZERO:
-      goToHatchHeight();
-      state = ELEVATOR_INITIALIZED;
+    case ELEVATOR_AT_TARGET:
+      if (timer.get() > 1.0) {
+        state = ELEVATOR_INITIALIZED;
+      }
       break;
     case ELEVATOR_INITIALIZED:
-    done =  true;
+      done = true;
       break;
     }
   }
@@ -79,14 +80,15 @@ public class InitElevator extends Command {
     System.out.println("InitElevator interrupted");
     end();
   }
+
   public void goToZeroLimit() {
     Robot.elevator.set(-0.1);
     if (Robot.elevator.isAtZero()) {
-        state = ELEVATOR_AT_ZERO;
+      state = ELEVATOR_AT_ZERO;
     }
-}
+  }
 
-public void goToHatchHeight() {
+  public void goToHatchHeight() {
     Robot.elevator.setElevatorTarget(Elevator.CARGO_HATCH_HEIGHT);
-}
+  }
 }

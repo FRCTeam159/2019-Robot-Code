@@ -22,10 +22,8 @@ public class GrabberCommands extends Command implements RobotMap {
   Timer timer = new Timer();
   Button toggleGrabber = new Button(ARMS_TOGGLE_BUTTON);
   Button tiltForwardButton = new Button(TILT_FORWARD_BUTTON);
-  Button tiltBackButton = new Button(TILT_BACK_BUTTON);
   static final int NOT_TILTING = 0;
-  static final int TILTING_UP = 1;
-  static final int TILTING_DOWN = 2;
+  static final int TILTING = 2;
   int tilting = NOT_TILTING;
   static final double tiltTime = 0.1; // seconds
 
@@ -61,10 +59,7 @@ public class GrabberCommands extends Command implements RobotMap {
         Robot.grabber.openClaw();
     }
     if (tiltForwardButton.isPressed()) {
-      tilting = TILTING_UP;
-      timer.reset();
-    } else if (tiltBackButton.isPressed()) {
-      tilting = TILTING_DOWN;
+      tilting = TILTING;
       timer.reset();
     }
     manageTilt();
@@ -75,15 +70,9 @@ public class GrabberCommands extends Command implements RobotMap {
     case NOT_TILTING:
       Robot.grabber.disableTilting();
       break;
-    case TILTING_UP:
+    case TILTING:
       if (timer.get() < tiltTime)
-        Robot.grabber.dropGrabber(true);
-      else
-        tilting = NOT_TILTING;
-      break;
-    case TILTING_DOWN:
-      if (timer.get() < tiltTime)
-        Robot.grabber.dropGrabber(false);
+        Robot.grabber.dropGrabber();
       else
         tilting = NOT_TILTING;
       break;

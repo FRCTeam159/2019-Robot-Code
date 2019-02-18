@@ -70,6 +70,7 @@ public class Robot extends TimedRobot implements RobotMap {
   public static int imageWidth = 320;
   public static int imageHeight = 240;
   static int FPS = 30;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -78,16 +79,16 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void robotInit() {
-    if(haveClimber)
+    if (haveClimber)
       climber = new Climber();
     m_oi = new OI();
     compressor1.start();
     camera1 = CameraServer.getInstance().startAutomaticCapture("Camera1", 0);
     camera1.setFPS(FPS);
     camera1.setResolution((int) imageWidth, (int) imageHeight);
-    //camera2 = CameraServer.getInstance().startAutomaticCapture("Camera2", 0);
-    //camera2.setFPS(FPS);
-    //camera2.setResolution((int) imageWidth, (int) imageHeight);
+    // camera2 = CameraServer.getInstance().startAutomaticCapture("Camera2", 0);
+    // camera2.setFPS(FPS);
+    // camera2.setResolution((int) imageWidth, (int) imageHeight);
 
     autonomousCommand = new Autonomous();
     /*
@@ -140,21 +141,19 @@ public class Robot extends TimedRobot implements RobotMap {
    */
   @Override
   public void autonomousInit() {
-    // if(doAuto){
-    // isAuto = true;
-    // isTele = false;
-    // }
-    // else{
-    // isAuto = false;
-    // isTele = true;
-    // }
-    isAuto = false;
-    isTele = true;
+    if (doAuto) {
+      isAuto = true;
+      isTele = false;
+    } else {
+      isAuto = false;
+      isTele = true;
+    }
+
     getDashboardData();
     compressor1.start();
     robotPosition = getPosition();
 
-    //autonomousCommand.start();
+    // autonomousCommand.start();
 
   }
 

@@ -30,11 +30,12 @@ public class testCommand extends Command {
   @Override
   protected void execute() {
     double stick = -OI.stick.getRawAxis(1);
-    if(Math.abs(stick) < .2){
+    if (Math.abs(stick) < .2) {
       stick = 0;
-      }
-      Robot.m_Talontest.set(stick);
     }
+    Robot.m_Talontest.set(stick);
+    Robot.m_Talontest.log();
+  }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override

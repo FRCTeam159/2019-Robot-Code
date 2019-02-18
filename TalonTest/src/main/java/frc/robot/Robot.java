@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.testCommand;
+import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Talontest;
 
 
@@ -27,6 +28,7 @@ public class Robot extends TimedRobot {
   public static Talontest m_Talontest = new Talontest();
   public static OI m_oi;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+  public static Grabber grabber = new Grabber();
 
   /**
    * This function is run when the robot is first started up and should be

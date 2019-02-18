@@ -14,15 +14,50 @@ package frc.robot;
  * floating around.
  */
 public interface RobotMap {
-  public static final int TESTMOTOR = 6;
-  public static final int DRIVER = 0;
-  // For example to map the left and right motors, you could define the
-  // following variables to use with your drivetrain subsystem.
-  // public static int leftMotor = 1;
-  // public static int rightMotor = 2;
+  // Motor IDs
+  public static final int FRONT_LEFT = 3;
+  public static final int BACK_LEFT = 4;
 
-  // If you are using multiple modules, make sure to define both the port
-  // number and the module. For example you with a rangefinder:
-  // public static int rangefinderPort = 1;
-  // public static int rangefinderModule = 1;
+  public static final int FRONT_RIGHT = 2;
+  public static final int BACK_RIGHT = 1;
+  public static final int ELEVATOR_MOTOR = 6;
+  public static final int GRABBER_MOTOR = 5;
+  public static final int CLIMBER_MOTOR = 7;
+  // Piston IDs  
+  public static final int GEAR_SHIFTER_FORWARD = 0;
+  public static final int GEAR_SHIFTER_REVERSE = 1;
+  public static final int ELEVATOR_PISTON_FORWARD = 2;
+  public static final int ELEVATOR_PISTON_REVERSE = 3;
+  public static final int GRABBER_PISTON_FORWARD = 4;
+  public static final int GRABBER_PISTON_REVERSE = 5;
+  //Servo IDs
+  public static final int ARM_SERVO = 0;
+  public static final double GRABBER_SERVO_VALUE = 0.5;
+  // Controller IDs
+  public static final int DRIVER = 0;
+  // These are button IDs
+  public static final int LEFT_JOYSTICK = 1;
+  public static final int RIGHT_JOYSTICK = 4;
+  public static final int LEFT_TRIGGER = 2;
+  public static final int RIGHT_TRIGGER = 3;
+  public static final int LEFT_BUMPER_BUTTON = 5;
+  public static final int RIGHT_BUMPER_BUTTON = 6;
+  public static final int RESET_ELEVATOR_BUTTON = 2;
+  public static final int INTAKE_BUTTON = 1;
+  public static final int OUTPUT_BUTTON = 3;
+  public static final int ARMS_TOGGLE_BUTTON = 4;
+  public static final int GEAR_BUTTON = 7;
+  public static final int CLIMB_BUTTON = 8;
+  public static final int TILT_BACK_BUTTON = 9;
+  public static final int TILT_FORWARD_BUTTON = 10;
+  // General Constants
+  public static final int TIMEOUT = 10;
+  public static final int ENCODER_TIMEOUT = 10;
+  public static final int ENCODER_WINDOW_SIZE = 4;
+  public static final int ENCODER_STATUS_FRAME_PERIOD = 4;
+
+  public static final int LEFT_POSITION = 0;
+  public static final int CENTER_POSITION = 1;
+  public static final int RIGHT_POSITION = 2;
+  public static final int ILLEGAL_POSITION = 3;
 }

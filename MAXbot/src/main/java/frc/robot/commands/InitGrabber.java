@@ -15,7 +15,7 @@ public class InitGrabber extends Command {
   Timer timer = new Timer();
   static final int UNINITIALIZED = 0;
   static final int ARMS_OPEN = 1;
-  static final int GRABBER_UPRIGHT = 2;
+  static final int GRABBER_DROPPED = 2;
   int state = UNINITIALIZED;
   boolean done = false;
   public InitGrabber() {
@@ -39,17 +39,17 @@ public class InitGrabber extends Command {
       case UNINITIALIZED:
         if (timer.get() > 0.5){
           state = ARMS_OPEN;
-          Robot.grabber.dropGrabber(true);
+          Robot.grabber.dropGrabber();
           timer.reset();
         }
         break;
       case ARMS_OPEN:
         if (timer.get() > 0.75)
-          state = GRABBER_UPRIGHT;
+          state = GRABBER_DROPPED;
         else
-          Robot.grabber.dropGrabber(true);
+          Robot.grabber.dropGrabber();
         break;
-      case GRABBER_UPRIGHT:
+      case GRABBER_DROPPED:
         done = true;
         break;
       }

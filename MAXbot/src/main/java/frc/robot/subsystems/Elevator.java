@@ -82,11 +82,11 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
         pidController = new PIDController(P, I, D, F, this, this, 0.01);
         pidController.setOutputRange(-1.0, 1.0);
         reset();
-        // Code for Hard limit switches for talons
-       // elevatorMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
-         //       LimitSwitchNormal.NormallyClosed, 10);
-        //elevatorMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
-          //      LimitSwitchNormal.NormallyClosed, 10);
+         //Code for Hard limit switches for talons
+        elevatorMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
+                LimitSwitchNormal.NormallyClosed, 10);
+        elevatorMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector,
+                LimitSwitchNormal.NormallyClosed, 10);
     }
 
     // Put methods for controlling this subsystem here. Call these from Commands.
@@ -96,7 +96,7 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
     }
 
     public double getPosition() {
-        double pos = (elevatorMotor.getSensorCollection().getQuadraturePosition() / TICKS_PER_INCH) * 3;
+        double pos = (elevatorMotor.getSensorCollection().getQuadraturePosition() / TICKS_PER_INCH) * 4;
         SmartDashboard.putNumber("Elevator", pos);
         // SmartDashboard.putNumber("ElevatorCurrent",
         // elevatorMotor.getOutputCurrent());
