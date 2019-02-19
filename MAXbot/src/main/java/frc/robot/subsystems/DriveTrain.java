@@ -49,8 +49,7 @@ public class DriveTrain extends Subsystem implements RobotMap {
 		backLeft = new SparkMotor(BACK_LEFT);
 		backRight = new SparkMotor(BACK_RIGHT);
 		gyro = new ADXRS450_Gyro();
-		gearPneumatic = new DoubleSolenoid(RobotMap.GEAR_SHIFTER_FORWARD,
-				RobotMap.GEAR_SHIFTER_REVERSE);
+		gearPneumatic = new DoubleSolenoid(RobotMap.GEAR_SHIFTER_FORWARD, RobotMap.GEAR_SHIFTER_REVERSE);
 
 		System.out.println("Gear ratio is: " + GEAR_RATIO);
 
@@ -154,13 +153,13 @@ public class DriveTrain extends Subsystem implements RobotMap {
 	}
 
 	private void log() {
-		//SmartDashboard.putNumber("Heading", getHeading());
+		// SmartDashboard.putNumber("Heading", getHeading());
 		// SmartDashboard.putNumber("Left wheels",
 		// -backLeft.getSensorCollection().getQuadraturePosition());
 		// SmartDashboard.putNumber("Right wheels",
 		// frontRight.getSensorCollection().getQuadraturePosition());
-		//SmartDashboard.putNumber("Left distance", getLeftDistance());
-		//SmartDashboard.putNumber("Right distance", getRightDistance());
+		// SmartDashboard.putNumber("Left distance", getLeftDistance());
+		// SmartDashboard.putNumber("Right distance", getRightDistance());
 		// SmartDashboard.putNumber("Velocity", getVelocity());
 		SmartDashboard.putNumber("Distance", getDistance());
 		// SmartDashboard.putBoolean("Low Gear", inLowGear());

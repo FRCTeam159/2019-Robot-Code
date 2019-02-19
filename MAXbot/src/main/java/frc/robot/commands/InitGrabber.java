@@ -18,6 +18,7 @@ public class InitGrabber extends Command {
   static final int GRABBER_DROPPED = 2;
   int state = UNINITIALIZED;
   boolean done = false;
+
   public InitGrabber() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -36,23 +37,23 @@ public class InitGrabber extends Command {
   @Override
   protected void execute() {
     switch (state) {
-      case UNINITIALIZED:
-        if (timer.get() > 0.5){
-          state = ARMS_OPEN;
-          Robot.grabber.dropGrabber();
-          timer.reset();
-        }
-        break;
-      case ARMS_OPEN:
-        if (timer.get() > 0.75)
-          state = GRABBER_DROPPED;
-        else
-          Robot.grabber.dropGrabber();
-        break;
-      case GRABBER_DROPPED:
-        done = true;
-        break;
+    case UNINITIALIZED:
+      if (timer.get() > 0.5) {
+        state = ARMS_OPEN;
+        Robot.grabber.dropGrabber();
+        timer.reset();
       }
+      break;
+    case ARMS_OPEN:
+      if (timer.get() > 0.75)
+        state = GRABBER_DROPPED;
+      else
+        Robot.grabber.dropGrabber();
+      break;
+    case GRABBER_DROPPED:
+      done = true;
+      break;
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

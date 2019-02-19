@@ -25,7 +25,7 @@ public class Climber extends Subsystem implements RobotMap {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public Climber(){
+  public Climber() {
     climberMotor = new CANSparkMax(CLIMBER_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
   }
 
@@ -35,14 +35,15 @@ public class Climber extends Subsystem implements RobotMap {
     setDefaultCommand(new ClimberCommands());
   }
 
-  void set(double value){
+  void set(double value) {
     climberMotor.set(value);
   }
 
-  public void setClimbValue(){
+  public void setClimbValue() {
     climberMotor.set(climbValue);
   }
-  public void setZeroValue(){
+
+  public void setZeroValue() {
     climberMotor.set(0);
   }
 

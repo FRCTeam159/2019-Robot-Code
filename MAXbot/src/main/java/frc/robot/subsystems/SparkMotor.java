@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.subsystems;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANEncoder;
@@ -13,19 +14,22 @@ import com.revrobotics.CANEncoder;
 /**
  * Add your docs here.
  */
-class SparkMotor extends CANSparkMax{
+class SparkMotor extends CANSparkMax {
     private CANEncoder encoder;
     private double zeroValue = 0;
-    SparkMotor(int id){
+
+    SparkMotor(int id) {
         super(id, CANSparkMaxLowLevel.MotorType.kBrushless);
         encoder = getEncoder();
         zeroValue = encoder.getPosition();
     }
+
     public double getRotations() {
         double position = encoder.getPosition();
         return (position - zeroValue);
     }
-    public void reset(){
+
+    public void reset() {
         zeroValue = encoder.getPosition();
     }
 }

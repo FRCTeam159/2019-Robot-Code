@@ -30,10 +30,11 @@ public class Talontest extends Subsystem implements RobotMap {
   private static final double TICKS_PER_REVOLUTION = GEAR_RATIO * ENCODER_TICKS * ENCODER_EDGES;
   private static final double INCHES_PER_REV = Math.PI * WHEEL_DIAMETER;
   private static final double TICKS_PER_INCH = TICKS_PER_REVOLUTION / INCHES_PER_REV;
+  private static final double BASE_DISTANCE_TO_GROUND = 8;
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   public Talontest() {
-    motor = new TalonSRX(ARM_SERVO);
+    motor = new TalonSRX(ELEVATOR_MOTOR);
 
     /*
      * motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
@@ -67,20 +68,23 @@ public class Talontest extends Subsystem implements RobotMap {
   }
   public void reset(){
     motor.set(ControlMode.PercentOutput, 0);
-        motor.getSensorCollection().setQuadraturePosition(0, 10);
-        log();
+      motor.getSensorCollection().setQuadraturePosition(0, 10);
+      log();
   }
   public void set(double d) {
     motor.set(ControlMode.PercentOutput, d);
   }
 
   public double getPosition() {
-    double pos = (motor.getSensorCollection().getQuadraturePosition() / TICKS_PER_INCH) * 4;
+    double pos = ((motor.getSensorCollection().getQuadraturePosition() / TICKS_PER_INCH) * 3) + BASE_DISTANCE_TO_GROUND;
     
     return pos;
   }
+  public static double round(double v){
+return 0.01*Math.round(v*100);
+  }
   public void log(){
-    SmartDashboard.putNumber("Elevator", getPosition());
+    SmartDashboard.putNumber("Elevator", round(getPosition()));
     SmartDashboard.putBoolean("lowerlimit", isAtZero());
     SmartDashboard.putBoolean("upperlimit", isAtTop());
   }

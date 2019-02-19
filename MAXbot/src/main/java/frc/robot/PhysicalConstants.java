@@ -11,8 +11,6 @@ public class PhysicalConstants {
     public static double KD = 0.0;
     public static double GFACT = 2.0;
 
+    // beginning field constants
 
-
-    //beginning field constants
-    
 }

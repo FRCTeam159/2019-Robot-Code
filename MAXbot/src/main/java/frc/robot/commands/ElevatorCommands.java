@@ -19,8 +19,7 @@ public class ElevatorCommands extends Command implements RobotMap {
     Button upDeltaButton = new Button(RIGHT_BUMPER_BUTTON);
     Button downDeltaButton = new Button(LEFT_BUMPER_BUTTON);
     Button hatchButton = new Button(RESET_ELEVATOR_BUTTON);
-    Button tiltForwardButton = new Button(TILT_FORWARD_BUTTON);
-    Button tiltBackButton =new Button(TILT_BACK_BUTTON);
+    Button tiltButton = new Button(TILT_ELEVATOR_BUTTON);
 
     public ElevatorCommands() {
         // Use requires() here to declare subsystem dependencies eg. requires(chassis);
@@ -38,8 +37,8 @@ public class ElevatorCommands extends Command implements RobotMap {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         Joystick stick = OI.stick;
-       // if(!(Robot.isTele))
-         //   return;
+        // if(!(Robot.isTele))
+        // return;
         double rightTriggerPressed = stick.getRawAxis(RIGHT_TRIGGER);
         double leftTriggerPressed = stick.getRawAxis(LEFT_TRIGGER);
         if (hatchButton.isPressed())
@@ -52,11 +51,14 @@ public class ElevatorCommands extends Command implements RobotMap {
             setPoint += Elevator.MOVE_RATE;
         else if (leftTriggerPressed > 0)
             setPoint -= Elevator.MOVE_RATE;
-        else if (tiltBackButton.isPressed())
-            Robot.elevator.tiltElevator(false);
-        else if (tiltForwardButton.isPressed())
-            Robot.elevator.tiltElevator(true);
-            
+        else if (tiltButton.isPressed()) {
+            if (Robot.elevator.isTilted()) {
+                Robot.elevator.tiltElevator(true);
+            } else {
+                Robot.elevator.tiltElevator(false);
+            }
+        }
+
         Robot.elevator.setElevatorTarget(setPoint);
         setPoint = Robot.elevator.getElevatorTarget();
 
@@ -71,7 +73,7 @@ public class ElevatorCommands extends Command implements RobotMap {
     protected void end() {
         System.out.println("ElevatorCommands end");
         // Robot.elevator.reset();
-        }
+    }
 
     // Called when another command which requires one or more of the same subsystems
     // is scheduled to run
@@ -79,5 +81,5 @@ public class ElevatorCommands extends Command implements RobotMap {
         System.out.println("ElevatorCommands interrupted");
         end();
     }
-    
+
 }

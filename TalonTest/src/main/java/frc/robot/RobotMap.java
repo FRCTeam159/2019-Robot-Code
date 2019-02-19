@@ -42,14 +42,14 @@ public interface RobotMap {
   public static final int RIGHT_TRIGGER = 3;
   public static final int LEFT_BUMPER_BUTTON = 5;
   public static final int RIGHT_BUMPER_BUTTON = 6;
-  public static final int RESET_ELEVATOR_BUTTON = 2;
+  public static final int RESET_ELEVATOR_BUTTON = 4;
   public static final int INTAKE_BUTTON = 1;
   public static final int OUTPUT_BUTTON = 3;
-  public static final int ARMS_TOGGLE_BUTTON = 4;
+  public static final int ARMS_TOGGLE_BUTTON = 2;
   public static final int GEAR_BUTTON = 7;
   public static final int CLIMB_BUTTON = 8;
-  public static final int TILT_BACK_BUTTON = 9;
-  public static final int TILT_FORWARD_BUTTON = 10;
+  public static final int TILT_GRABBER_BUTTON = 9;
+  public static final int TILT_ELEVATOR_BUTTON = 10;
   // General Constants
   public static final int TIMEOUT = 10;
   public static final int ENCODER_TIMEOUT = 10;

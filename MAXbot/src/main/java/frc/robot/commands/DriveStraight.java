@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveStraight extends Command implements PIDSource, PIDOutput {
 	private PIDController pid;
 	private PIDSourceType type = PIDSourceType.kDisplacement;
-	private final double distance;
+	private static double distance = 0;
 	private static final double tolerance = 0.1;
 	private static final boolean lastOntarget = false;
 	private boolean started = false;
@@ -25,6 +25,7 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 	private static final double D = 0.0;
 	private static final double TOL = 0.05;
 	private static final double intime = 0.025;
+	public static double maxSpeed = 1.0;
 	private Timer timer = new Timer();
 
 	public DriveStraight(double distance) {
@@ -34,7 +35,12 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 		requires(Robot.drivetrain);
 	}
 
-//	 Called just before this Command runs the first time
+	public DriveStraight(double distance, double speed) {
+		super(distance);
+		maxSpeed = speed;
+	}
+
+	// Called just before this Command runs the first time
 	protected void initialize() {
 		System.out.printf("DriveStraight.initialize distance = %f\n", distance);
 		pid.reset();
@@ -47,7 +53,7 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 
 	}
 
-//	 Called repeatedly when this Command is scheduled to run
+	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		if (!started && timer.get() > intime && !pid.isEnabled()) {
 			pid.reset();
@@ -56,7 +62,7 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 		}
 	}
 
-//	 Make this return true when this Command no longer needs to run execute()
+	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
 		if (timer.get() > 3.0) {
 			printFinishedMessage();
@@ -65,16 +71,17 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 		return pid.onTarget();
 	}
 
-//	 Called once after isFinished returns true
+	// Called once after isFinished returns true
 	protected void end() {
 		Robot.drivetrain.disable();
 		pid.disable();
 		started = false;
-		
+
 		printEndMessage();
 	}
 
-//	 Called when another command which requires one or more of the same subsystems is scheduled to run
+	// Called when another command which requires one or more of the same subsystems
+	// is scheduled to run
 	protected void interrupted() {
 		end();
 	}
@@ -96,7 +103,9 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 		}
 		if (debug) {
 			double time = timer.get();
-			System.out.printf("time=%f leftDistance=%g rightDistance=%g distance=%g\n", time * 1000, Robot.drivetrain.getLeftDistance(), Robot.drivetrain.getRightDistance(), Robot.drivetrain.getDistance());
+			System.out.printf("time=%f leftDistance=%g rightDistance=%g distance=%g\n", time * 1000,
+					Robot.drivetrain.getLeftDistance(), Robot.drivetrain.getRightDistance(),
+					Robot.drivetrain.getDistance());
 		}
 		return Robot.drivetrain.getDistance();
 	}
@@ -104,14 +113,16 @@ public class DriveStraight extends Command implements PIDSource, PIDOutput {
 	@Override
 	public void pidWrite(double output) {
 		if (started) {
+			output = output > maxSpeed ? maxSpeed : output;
+			output = output < -maxSpeed ? -maxSpeed : output;
 			Robot.drivetrain.setRaw(output, output);
 		}
 	}
-	
+
 	private void printEndMessage() {
 		System.out.println("drivestraight.end");
 	}
-	
+
 	private void printFinishedMessage() {
 		System.out.println("timer expired");
 	}

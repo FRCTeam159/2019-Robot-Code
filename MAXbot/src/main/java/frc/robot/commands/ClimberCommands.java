@@ -13,10 +13,10 @@ import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
-public class ClimberCommands extends Command implements RobotMap{
+public class ClimberCommands extends Command implements RobotMap {
   public ClimberCommands() {
     // Use requires() here to declare subsystem dependencies
-  requires(Robot.climber);
+    requires(Robot.climber);
   }
 
   // Called just before this Command runs the first time
@@ -30,9 +30,9 @@ public class ClimberCommands extends Command implements RobotMap{
   protected void execute() {
     Joystick stick = OI.stick;
     boolean isClimberButtonPressed = stick.getRawButton(CLIMB_BUTTON);
-    if(isClimberButtonPressed){
+    if (isClimberButtonPressed) {
       Robot.climber.setClimbValue();
-    } else{
+    } else {
       Robot.climber.setZeroValue();
     }
   }

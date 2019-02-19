@@ -21,11 +21,11 @@ import edu.wpi.first.wpilibj.Timer;
 public class GrabberCommands extends Command implements RobotMap {
   Timer timer = new Timer();
   Button toggleGrabber = new Button(ARMS_TOGGLE_BUTTON);
-  Button tiltForwardButton = new Button(TILT_FORWARD_BUTTON);
+  Button tiltForwardButton = new Button(TILT_GRABBER_BUTTON);
   static final int NOT_TILTING = 0;
   static final int TILTING = 2;
   int tilting = NOT_TILTING;
-  static final double tiltTime = 0.1; // seconds
+  static final double tiltTime = 0.5; // seconds
 
   public GrabberCommands() {
     // Use requires() here to declare subsystem dependencies
@@ -41,8 +41,6 @@ public class GrabberCommands extends Command implements RobotMap {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (!(Robot.isTele))
-      return;
     Joystick stick = OI.stick;
     boolean intakeButtonPressed = stick.getRawButton(INTAKE_BUTTON);
     boolean outputButtonPressed = stick.getRawButton(OUTPUT_BUTTON);

@@ -171,6 +171,7 @@ public class Robot extends TimedRobot implements RobotMap {
     isTele = true;
     drivetrain.reset();
     compressor1.start();
+    elevator.reset();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -229,4 +230,7 @@ public class Robot extends TimedRobot implements RobotMap {
       publishPath = SmartDashboard.getBoolean("Publish Path", publishPath);
     }
   }
+  public static double round(double v){
+    return 0.01*Math.round(v*100);
+      }
 }

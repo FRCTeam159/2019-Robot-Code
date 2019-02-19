@@ -16,7 +16,7 @@ public class Autonomous extends CommandGroup {
    */
   public Autonomous() {
     addSequential(new InitGrabber());
-    addSequential(new DriveStraight(96));
+    addSequential(new DriveStraight(108.0, 0.4));
     addSequential(new InitElevator());
     addSequential(new EndAuto());
     // addSequential(new DriveToTarget(24.0));
