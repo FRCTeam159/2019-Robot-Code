@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 import frc.robot.commands.GrabberCommands;
 
@@ -43,11 +44,13 @@ public class Grabber extends Subsystem implements RobotMap {
   public void closeClaw() {
     grabPneumatic.set(DoubleSolenoid.Value.kReverse);
     clawOpen = false;
+    SmartDashboard.putBoolean("ClawOpen", clawOpen);
   }
 
   public void openClaw() {
     grabPneumatic.set(DoubleSolenoid.Value.kForward);
     clawOpen = true;
+    SmartDashboard.putBoolean("ClawOpen", clawOpen);
   }
 
   public void eject() {

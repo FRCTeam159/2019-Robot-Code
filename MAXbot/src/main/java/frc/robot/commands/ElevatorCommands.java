@@ -41,13 +41,13 @@ public class ElevatorCommands extends Command implements RobotMap {
         // return;
         double rightTriggerPressed = stick.getRawAxis(RIGHT_TRIGGER);
         double leftTriggerPressed = stick.getRawAxis(LEFT_TRIGGER);
-        if (hatchButton.isPressed())
-            setPoint = Elevator.CARGO_HATCH_HEIGHT;
-        else if (upDeltaButton.isPressed())
-            setPoint += Elevator.DELTA_TARGET_HEIGHT;
-        else if (downDeltaButton.isPressed())
-            setPoint -= Elevator.DELTA_TARGET_HEIGHT;
-        else if (rightTriggerPressed > 0)
+       if (hatchButton.isPressed())
+           setPoint = Elevator.CARGO_HATCH_HEIGHT;
+      //  else if (upDeltaButton.isPressed())
+         //   setPoint += Elevator.DELTA_TARGET_HEIGHT;
+       // else if (downDeltaButton.isPressed())
+          //  setPoint -= Elevator.DELTA_TARGET_HEIGHT;
+         if (rightTriggerPressed > 0)
             setPoint += Elevator.MOVE_RATE;
         else if (leftTriggerPressed > 0)
             setPoint -= Elevator.MOVE_RATE;

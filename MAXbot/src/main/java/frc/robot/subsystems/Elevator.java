@@ -31,7 +31,7 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
      * P = 0.125 I = 0 D = 0.75 F = 0
      */
     // all distance units are in inches
-    private static final double P = 0.01;
+    private static final double P = 0.08;
     private static final double I = 0.0;
     private static final double D = 0.0;
     private static final double F = 0.0;
@@ -44,17 +44,15 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
     private static final double INCHES_PER_REV = Math.PI * WHEEL_DIAMETER;
     private static final double TICKS_PER_INCH = TICKS_PER_REVOLUTION / INCHES_PER_REV;
 
-
-
     public static final double START_HEIGHT = 4;
-    public static final double CARGO_HATCH_HEIGHT = 16;
+    public static final double CARGO_HATCH_HEIGHT = 16.35;
     public static final double CARGO_BALL_HEIGHT = 36;
     public static final double ROCKET_BALL_HEIGHT_LOW = 27.5;
     public static final double DELTA_TARGET_HEIGHT = 28;
     public static final double ROCKET_TOP_BALL_HEIGHT = 2 * (DELTA_TARGET_HEIGHT) + ROCKET_BALL_HEIGHT_LOW;
-    public static final double MAX_HEIGHT = ROCKET_TOP_BALL_HEIGHT;
+    public static final double MAX_HEIGHT = ROCKET_TOP_BALL_HEIGHT + 10;
 
-    public static final double MAX_SPEED = 60;
+    public static final double MAX_SPEED = 27;
     public static final double CYCLE_TIME = 0.02;
     public static final double MOVE_RATE = CYCLE_TIME * MAX_SPEED;
     public static final double BASE_DISTANCE_TO_GROUND = 8;
@@ -98,18 +96,20 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
 
     public double getPosition() {
         double pos = (elevatorMotor.getSensorCollection().getQuadraturePosition() / TICKS_PER_INCH) * 3;
-        SmartDashboard.putNumber("Elevator", Robot.round(pos));
         // SmartDashboard.putNumber("ElevatorCurrent",
         // elevatorMotor.getOutputCurrent());
         return pos;
     }
 
     public void setElevatorTarget(double value) {
-        value = value < MIN_HEIGHT ? MIN_HEIGHT : value;
-        value = value > MAX_HEIGHT ? MAX_HEIGHT : value;
-        SmartDashboard.putNumber("Target", value);
-        elevatorTarget = value - BASE_DISTANCE_TO_GROUND;
-        pidController.setSetpoint(elevatorTarget);
+        if (!(isAtTop())) {
+            value = value < MIN_HEIGHT ? MIN_HEIGHT : value;
+            value = value > MAX_HEIGHT ? MAX_HEIGHT : value;
+            log();
+            SmartDashboard.putNumber("Target", value);
+            elevatorTarget = value - BASE_DISTANCE_TO_GROUND;
+            pidController.setSetpoint(elevatorTarget);
+        }
     }
 
     public double getElevatorTarget() {
@@ -127,15 +127,16 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
         pidController.setSetpoint(elevatorTarget);
         elevatorMotor.set(ControlMode.PercentOutput, 0);
         elevatorMotor.getSensorCollection().setQuadraturePosition(0, RobotMap.ENCODER_TIMEOUT);
+        log();
     }
 
     public boolean isAtZero() {
         // TODO: implement lower limit switch
-        return elevatorMotor.getSensorCollection().isRevLimitSwitchClosed();
+        return !elevatorMotor.getSensorCollection().isRevLimitSwitchClosed();
     }
 
     public boolean isAtTop() {
-        return elevatorMotor.getSensorCollection().isFwdLimitSwitchClosed();
+        return !elevatorMotor.getSensorCollection().isFwdLimitSwitchClosed();
     }
 
     public void enable() {
@@ -149,8 +150,9 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
     private double metersToInches(double meters) {
         return (100 * meters) / 2.54;
     }
-//if elevator elevator is tilted backwards, then the piston pushes and
-//puts the elevator into upright position, if it is not backwards then it 
+
+    // if elevator elevator is tilted backwards, then the piston pushes and
+    // puts the elevator into upright position, if it is not backwards then it
     public void tiltElevator(boolean forward) {
         if (forward) {
             elevatorPneumatic.set(DoubleSolenoid.Value.kForward);
@@ -166,13 +168,13 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
     @Override
     public void pidWrite(double value) {
         SmartDashboard.putNumber("pidWrite", Robot.round(value));
-        //elevatorMotor.set(ControlMode.PercentOutput, value);
+        elevatorMotor.set(ControlMode.PercentOutput, value);
     }
 
     @Override
     public double pidGet() {
         double pos = getPosition();
-         SmartDashboard.putNumber("pidGet", Robot.round(pos));
+        SmartDashboard.putNumber("pidGet", Robot.round(pos));
         return pos;
     }
 
@@ -188,5 +190,11 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
 
     public boolean isTilted() {
         return tilted;
+    }
+
+    public void log() {
+        SmartDashboard.putNumber("Elevator", Robot.round(getPosition()));
+        SmartDashboard.putBoolean("lowerlimit", isAtZero());
+        SmartDashboard.putBoolean("upperlimit", isAtTop());
     }
 }

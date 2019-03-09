@@ -36,6 +36,7 @@ import frc.robot.subsystems.DriveTrain;
 //import frc.robot.subsystems.VisionProcess;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.LightSystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -52,13 +53,14 @@ public class Robot extends TimedRobot implements RobotMap {
   public static Climber climber = null;
   public static final double MAX_ELEVATOR_CURRENT = 40;
   Compressor compressor1 = new Compressor();
+  public static LightSystem lightSystem = new LightSystem();
   // public static Cameras m_cameras = new Cameras();
 
   CommandGroup autonomousCommand;
-  SendableChooser<Integer> positionChooser = new SendableChooser<>();
+  //SendableChooser<Integer> positionChooser = new SendableChooser<>();
   public static boolean useGyro = false;
   public static boolean calibrate = false;
-  public static int robotPosition = CENTER_POSITION;
+  //public static int robotPosition = CENTER_POSITION;
   public static boolean publishPath = false;
   public static boolean isAuto = false;
   public static boolean isTele = false;
@@ -86,9 +88,9 @@ public class Robot extends TimedRobot implements RobotMap {
     camera1 = CameraServer.getInstance().startAutomaticCapture("Camera1", 0);
     camera1.setFPS(FPS);
     camera1.setResolution((int) imageWidth, (int) imageHeight);
-    // camera2 = CameraServer.getInstance().startAutomaticCapture("Camera2", 0);
-    // camera2.setFPS(FPS);
-    // camera2.setResolution((int) imageWidth, (int) imageHeight);
+    camera2 = CameraServer.getInstance().startAutomaticCapture("Camera2", 1);
+    camera2.setFPS(FPS);
+    camera2.setResolution((int) imageWidth, (int) imageHeight);
 
     autonomousCommand = new Autonomous();
     /*
@@ -151,7 +153,7 @@ public class Robot extends TimedRobot implements RobotMap {
 
     getDashboardData();
     compressor1.start();
-    robotPosition = getPosition();
+    //robotPosition = getPosition();
 
     // autonomousCommand.start();
 
@@ -171,7 +173,6 @@ public class Robot extends TimedRobot implements RobotMap {
     isTele = true;
     drivetrain.reset();
     compressor1.start();
-    elevator.reset();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -196,16 +197,16 @@ public class Robot extends TimedRobot implements RobotMap {
   public void testPeriodic() {
   }
 
-  private int getPosition() {
-    return positionChooser.getSelected();
-  }
+ // private int getPosition() {
+   // return positionChooser.getSelected();
+  //}
 
   private void putValuesOnSmartDashboard() {
     if (haveAuto) {
-      positionChooser.addObject("Left", 0);
-      positionChooser.addDefault("Center", 1);
-      positionChooser.addObject("Right", 2);
-      SmartDashboard.putData("Position", positionChooser);
+     // positionChooser.addObject("Left", 0);
+      //positionChooser.addDefault("Center", 1);
+      //positionChooser.addObject("Right", 2);
+      //SmartDashboard.putData("Position", positionChooser);
       SmartDashboard.putNumber("MAX_VEL", PhysicalConstants.MAX_VEL);
       SmartDashboard.putNumber("MAX_ACC", PhysicalConstants.MAX_ACC);
       SmartDashboard.putNumber("MAX_JRK", PhysicalConstants.MAX_JRK);

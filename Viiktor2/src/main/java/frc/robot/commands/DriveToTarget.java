@@ -63,7 +63,7 @@ public class DriveToTarget extends Command implements PIDSource, PIDOutput {
      // error = 0;
     //}
     //SmartDashboard.putNumber("RangeError", error / kP);
-    //Robot.m_drivetrain.arcadeDrive(error, 0);
+    //Robot.drivetrain.arcadeDrive(error, 0);
     
     //System.out.println("Range = " + range);
 
@@ -92,7 +92,7 @@ return pid.onTarget();
 
   @Override
   public void pidWrite(double output) {
-    Robot.m_drivetrain.arcadeDrive(output, 0);
+    Robot.drivetrain.arcadeDrive(output, 0);
   //  SmartDashboard.putNumber("pidWrite", output);
     System.out.println("pidWrite is: " + output);
   }
@@ -110,7 +110,7 @@ return pid.onTarget();
   @Override
   public double pidGet() {
     //double range = table.getEntry("Range").getDouble(0.0);
-    double range = Robot.m_drivetrain.getDistance();
+    double range = Robot.drivetrain.getDistance();
     return range;
 }
 }

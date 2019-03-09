@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Autonomous;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.VisionProcess;
 import edu.wpi.first.wpilibj.CameraServer;
 
@@ -26,9 +27,10 @@ import edu.wpi.first.wpilibj.CameraServer;
  * project.
  */
 public class Robot extends TimedRobot implements RobotMap {
-  public static DriveTrain m_drivetrain = new DriveTrain();
+  public static DriveTrain drivetrain = new DriveTrain();
+  public static Elevator elevator = new Elevator();
   public static OI m_oi;
-//  public static Cameras m_cameras = new Cameras();
+  // public static Cameras m_cameras = new Cameras();
 
   Command m_autonomousCommand;
   SendableChooser<Integer> positionChooser = new SendableChooser<>();
@@ -36,9 +38,9 @@ public class Robot extends TimedRobot implements RobotMap {
   public static boolean calibrate = false;
   public static int robotPosition = CENTER_POSITION;
   public static boolean publishPath = false;
-  public static double P=0.02;
-  public static double I=1.0E-4;
-  public static double D=0;
+  public static double P = 0.02;
+  public static double I = 1.0E-4;
+  public static double D = 0;
   public static boolean isAuto = false;
   public static boolean isTele = false;
   public static boolean doAuto = false;
@@ -53,8 +55,8 @@ public class Robot extends TimedRobot implements RobotMap {
   public void robotInit() {
     m_oi = new OI();
     vision = new VisionProcess();
-    //vision.init();
-    //vision.start();
+    // vision.init();
+    // vision.start();
     putValuesOnSmartDashboard();
     // m_chooser.addDefault("Default Auto", new ExampleCommand());
     // chooser.addObject("My Auto", new MyAutoCommand());
@@ -88,6 +90,7 @@ public class Robot extends TimedRobot implements RobotMap {
 
   @Override
   public void disabledPeriodic() {
+    OI.test();
     Scheduler.getInstance().run();
   }
 
@@ -106,22 +109,21 @@ public class Robot extends TimedRobot implements RobotMap {
   @Override
   public void autonomousInit() {
     getDashboardData();
-    if(doAuto){
-    isAuto = true;
-    isTele = false;
-    }
-    else{
+    if (doAuto) {
+      isAuto = true;
+      isTele = false;
+    } else {
       isAuto = false;
       isTele = true;
     }
     System.out.println("autonomous init");
-    m_drivetrain.reset();
+    drivetrain.reset();
 
     robotPosition = getPosition();
-    if(doAuto){
-    CommandGroup autonomousCommand = new Autonomous();
-    autonomousCommand.start();
-  } 
+    if (doAuto) {
+      CommandGroup autonomousCommand = new Autonomous();
+      autonomousCommand.start();
+    }
 
   }
 
@@ -137,7 +139,7 @@ public class Robot extends TimedRobot implements RobotMap {
   public void teleopInit() {
     isAuto = false;
     isTele = true;
-    m_drivetrain.reset();
+    drivetrain.reset();
     System.out.println("Teleop Init");
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -185,7 +187,7 @@ public class Robot extends TimedRobot implements RobotMap {
     SmartDashboard.putNumber("I", I);
     SmartDashboard.putNumber("D", D);
     SmartDashboard.putBoolean("Do Auto", doAuto);
-    }
+  }
 
   void getDashboardData() {
     useGyro = SmartDashboard.getBoolean("Use Gyro", useGyro);
@@ -196,11 +198,15 @@ public class Robot extends TimedRobot implements RobotMap {
     PhysicalConstants.KP = SmartDashboard.getNumber("KP", PhysicalConstants.KP);
     calibrate = SmartDashboard.getBoolean("Calibrate", calibrate);
     publishPath = SmartDashboard.getBoolean("Publish Path", publishPath);
-    P=SmartDashboard.getNumber("P", P);
-    I=SmartDashboard.getNumber("I", I);
-    D=SmartDashboard.getNumber("D", D);
+    P = SmartDashboard.getNumber("P", P);
+    I = SmartDashboard.getNumber("I", I);
+    D = SmartDashboard.getNumber("D", D);
     doAuto = SmartDashboard.getBoolean("Do Auto", false);
 
+  }
+ 
+  public static double round(double v){
+    return 0.01*Math.round(v*100);
   }
 }
 

@@ -63,7 +63,7 @@ public class DrivePath extends Command implements frc.robot.RobotMap {
     // Y values are inverted, left and right wheels are inverted, counter-clockwise is clockwise. Everything is mirrored.
 
     public DrivePath(double d, double y) {
-        requires(Robot.m_drivetrain);
+        requires(Robot.drivetrain);
 
         distance = feetToMeters(d);
         offSet = feetToMeters(y);
@@ -146,7 +146,7 @@ public class DrivePath extends Command implements frc.robot.RobotMap {
 
         leftFollower.reset();
         rightFollower.reset();
-        Robot.m_drivetrain.reset();
+        Robot.drivetrain.reset();
         timer.start();
         timer.reset();
         pathIndex = 0;
@@ -157,15 +157,15 @@ public class DrivePath extends Command implements frc.robot.RobotMap {
         if (trajectory == null || pushing) {
             return;
         }
-        double leftDistance = feetToMeters(Robot.m_drivetrain.getLeftDistance());
-        double rightDistance = feetToMeters(Robot.m_drivetrain.getRightDistance());
+        double leftDistance = feetToMeters(Robot.drivetrain.getLeftDistance());
+        double rightDistance = feetToMeters(Robot.drivetrain.getRightDistance());
 
         double leftPower = leftFollower.calculate(leftDistance);
         double rightPower = rightFollower.calculate(rightDistance);
 
         double turn = 0;
 
-        double gh = -Robot.m_drivetrain.getHeading(); // Assuming the gyro is giving a value in degrees
+        double gh = -Robot.drivetrain.getHeading(); // Assuming the gyro is giving a value in degrees
         gh = unwrap(last_heading, gh);
 
         double th = Pathfinder.r2d(leftFollower.getHeading()); // Should also be in degrees
@@ -196,7 +196,7 @@ public class DrivePath extends Command implements frc.robot.RobotMap {
         last_heading = gh;
         // this is reversed because we found it to be reversed, don't change unless you
         // know what you're doing
-        Robot.m_drivetrain.setRaw(lval, rval);
+        Robot.drivetrain.setRaw(lval, rval);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -205,7 +205,7 @@ public class DrivePath extends Command implements frc.robot.RobotMap {
             return true;
         }
         if ((leftFollower.isFinished() && rightFollower.isFinished()) ) {
-        	Robot.m_drivetrain.disable();
+        	Robot.drivetrain.disable();
             
 
         } else if (pushTimer.get() - runtime > 2) {
@@ -296,15 +296,15 @@ public class DrivePath extends Command implements frc.robot.RobotMap {
     }
 
     private void debugPathError() {
-        double leftDistance = 12 * (Robot.m_drivetrain.getLeftDistance());
-        double rightDistance = 12 * (Robot.m_drivetrain.getRightDistance());
+        double leftDistance = 12 * (Robot.drivetrain.getLeftDistance());
+        double rightDistance = 12 * (Robot.drivetrain.getRightDistance());
         Segment segment = leftTrajectory.segments[pathIndex];
         double leftTarget = metersToInches(segment.position);
         segment = rightTrajectory.segments[pathIndex];
         double rightTarget = metersToInches(segment.position);
 
         // double headingTarget = Pathfinder.r2d(segment.heading);
-        // double currentHeading = Robot.m_drivetrain.getHeading();
+        // double currentHeading = Robot.drivetrain.getHeading();
 
         System.out.format("%f %f %f %f %f\n", timer.get(), leftDistance, leftTarget, rightDistance, rightTarget);
 
@@ -350,13 +350,13 @@ public class DrivePath extends Command implements frc.robot.RobotMap {
         PathData pathData = new PathData();
 
         pathData.time = timer.get();
-        pathData.data[0] = 12 * (Robot.m_drivetrain.getLeftDistance());
-        pathData.data[2] = 12 * (Robot.m_drivetrain.getRightDistance());
+        pathData.data[0] = 12 * (Robot.drivetrain.getLeftDistance());
+        pathData.data[2] = 12 * (Robot.drivetrain.getRightDistance());
         Segment leftSegment = leftTrajectory.get(pathIndex);
         Segment rightSegment = rightTrajectory.get(pathIndex);
         pathData.data[1] = metersToInches(leftSegment.position);
         pathData.data[3] = metersToInches(rightSegment.position);
-        pathData.data[4] = -Robot.m_drivetrain.getHeading(); // Assuming the gyro is giving a value in degrees
+        pathData.data[4] = -Robot.drivetrain.getHeading(); // Assuming the gyro is giving a value in degrees
         double th = Pathfinder.r2d(rightSegment.heading); // Should also be in degrees
         pathData.data[5] = th > 180 ? th - 360 : th; // convert to signed angle fixes problem:th 0->360 gh:-180->180
         pathDataList.add(pathData);

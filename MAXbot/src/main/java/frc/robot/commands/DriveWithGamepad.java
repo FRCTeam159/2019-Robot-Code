@@ -19,7 +19,7 @@ import frc.robot.Button;
  * An example command. You can replace me with your own command.
  */
 public class DriveWithGamepad extends Command implements RobotMap {
-  double powerScale = 2.1;
+  double powerScale = 0.45;
   double turnScale = 0.65;
   double moveExponent = 0.75; // Raise moveExponent and turnExponent for more control at lower speeds,
   double turnExponent = 0.75; // and lower them for more control at higher speeds.
@@ -45,8 +45,8 @@ public class DriveWithGamepad extends Command implements RobotMap {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (!Robot.isTele)
-      return;
+    //if (!Robot.isTele)
+      //return;
     Joystick stick = OI.stick;
     double zs = -stick.getRawAxis(LEFT_JOYSTICK);
     double xs = stick.getRawAxis(RIGHT_JOYSTICK);

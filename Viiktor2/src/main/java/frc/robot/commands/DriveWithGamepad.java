@@ -29,7 +29,7 @@ public class DriveWithGamepad extends Command implements RobotMap{
   boolean Debug = false;
   public DriveWithGamepad() {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.m_drivetrain);
+    requires(Robot.drivetrain);
   }
 
   // Called just before this Command runs the first time
@@ -42,7 +42,7 @@ public class DriveWithGamepad extends Command implements RobotMap{
   protected void execute() {
     if(!Robot.isTele)
     return;
-    Joystick stick = OI.driverController;
+    Joystick stick = OI.stick;
     double zs=-stick.getRawAxis(RobotMap.LEFT_JOYSTICK);
     double xs=stick.getRawAxis(RobotMap.RIGHT_JOYSTICK);
     double z = zs;
@@ -66,9 +66,9 @@ public class DriveWithGamepad extends Command implements RobotMap{
       turnValue = (turnAxis / Math.abs(turnAxis)) * Math.pow(Math.abs(turnAxis), turnExponent); // Math.abs the
                                                                                                 // turnValue
     }
-    System.out.println("move Value is: " + moveValue);
+    //System.out.println("move Value is: " + moveValue);
     turnValue *= Math.abs(moveValue) * (1 - turnScale) + turnScale;
-    Robot.m_drivetrain.arcadeDrive(moveValue, turnValue);
+    Robot.drivetrain.arcadeDrive(moveValue, turnValue);
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -33,7 +33,7 @@ public class DriveTrain extends Subsystem implements RobotMap {
 	private static final double MEASURED_FEET_PER_REV = 10 / 18.8;
 	private static final double GEAR_RATIO = WHEEL_FEET_PER_REV / MEASURED_FEET_PER_REV;
 	private static final double INCHES_PER_REV = MEASURED_FEET_PER_REV * 12;
-	private ADXRS450_Gyro gyro;
+	//private ADXRS450_Gyro gyro;
 	private DoubleSolenoid gearPneumatic;
 	public boolean lowGear = false;
 
@@ -48,7 +48,7 @@ public class DriveTrain extends Subsystem implements RobotMap {
 		frontRight = new SparkMotor(FRONT_RIGHT);
 		backLeft = new SparkMotor(BACK_LEFT);
 		backRight = new SparkMotor(BACK_RIGHT);
-		gyro = new ADXRS450_Gyro();
+		//gyro = new ADXRS450_Gyro();
 		gearPneumatic = new DoubleSolenoid(RobotMap.GEAR_SHIFTER_FORWARD, RobotMap.GEAR_SHIFTER_REVERSE);
 
 		System.out.println("Gear ratio is: " + GEAR_RATIO);
@@ -111,7 +111,7 @@ public class DriveTrain extends Subsystem implements RobotMap {
 	}
 
 	public void reset() {
-		gyro.reset();
+	//	gyrogyro.reset();
 		backLeft.reset();
 		backRight.reset();
 		frontLeft.reset();
@@ -162,23 +162,24 @@ public class DriveTrain extends Subsystem implements RobotMap {
 		// SmartDashboard.putNumber("Right distance", getRightDistance());
 		// SmartDashboard.putNumber("Velocity", getVelocity());
 		SmartDashboard.putNumber("Distance", getDistance());
-		// SmartDashboard.putBoolean("Low Gear", inLowGear());
+		SmartDashboard.putBoolean("Low Gear", inLowGear());
 	}
 
 	public double getHeading() {
-		return gyro.getAngle();
+		//return gyro.getAngle();
+		return 0;
 	}
 
 	public void setHighGear() {
 		if (lowGear) {
-			gearPneumatic.set(DoubleSolenoid.Value.kForward);
+			gearPneumatic.set(DoubleSolenoid.Value.kReverse);
 			lowGear = false;
 		}
 	}
 
 	public void setLowGear() {
 		if (!lowGear) {
-			gearPneumatic.set(DoubleSolenoid.Value.kReverse);
+			gearPneumatic.set(DoubleSolenoid.Value.kForward);
 			lowGear = true;
 		}
 	}
