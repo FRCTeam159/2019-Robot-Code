@@ -29,7 +29,7 @@ public class DriveWithGamepad extends Command implements RobotMap {
   double zMinO = 0;
   boolean useDeadband = true;
   boolean Debug = false;
-  Button gearButton = new Button(GEAR_BUTTON);
+ // Button gearButton = new Button(GEAR_BUTTON);
 
   public DriveWithGamepad() {
     // Use requires() here to declare subsystem dependencies
@@ -52,12 +52,12 @@ public class DriveWithGamepad extends Command implements RobotMap {
     double xs = stick.getRawAxis(RIGHT_JOYSTICK);
     double z = zs;
     double x = xs;
-    if (gearButton.isPressed()) {
+   /* if (gearButton.isPressed()) {
       if (Robot.drivetrain.inLowGear())
         Robot.drivetrain.setHighGear();
       else
         Robot.drivetrain.setLowGear();
-    }
+    }*/
     if (useDeadband) {
       z = quadDeadband(zMinT, zMinO, zs);
       x = quadDeadband(xMinT, xMinO, xs);

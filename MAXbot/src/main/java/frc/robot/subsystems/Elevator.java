@@ -44,8 +44,7 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
     private static final double INCHES_PER_REV = Math.PI * WHEEL_DIAMETER;
     private static final double TICKS_PER_INCH = TICKS_PER_REVOLUTION / INCHES_PER_REV;
 
-    public static final double START_HEIGHT = 4;
-    public static final double CARGO_HATCH_HEIGHT = 16.35;
+    public static final double BASE_HATCH_HEIGHT = 19;
     public static final double CARGO_BALL_HEIGHT = 36;
     public static final double ROCKET_BALL_HEIGHT_LOW = 27.5;
     public static final double DELTA_TARGET_HEIGHT = 28;
@@ -55,8 +54,8 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
     public static final double MAX_SPEED = 27;
     public static final double CYCLE_TIME = 0.02;
     public static final double MOVE_RATE = CYCLE_TIME * MAX_SPEED;
-    public static final double BASE_DISTANCE_TO_GROUND = 8;
-    private static final double MIN_HEIGHT = BASE_DISTANCE_TO_GROUND;
+    public static final double BASE_DISTANCE_TO_GROUND = 8; //needs tuning in denver
+    public static final double MIN_HEIGHT = BASE_DISTANCE_TO_GROUND;
 
     private PIDController pidController;
     private PIDSourceType pidType = PIDSourceType.kDisplacement;
@@ -196,5 +195,6 @@ public class Elevator extends Subsystem implements PIDSource, PIDOutput, RobotMa
         SmartDashboard.putNumber("Elevator", Robot.round(getPosition()));
         SmartDashboard.putBoolean("lowerlimit", isAtZero());
         SmartDashboard.putBoolean("upperlimit", isAtTop());
+        SmartDashboard.putBoolean("HatchMode", Robot.hatchMode);
     }
 }

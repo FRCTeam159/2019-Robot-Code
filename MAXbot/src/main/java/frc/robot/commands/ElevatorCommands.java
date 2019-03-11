@@ -18,8 +18,9 @@ public class ElevatorCommands extends Command implements RobotMap {
 
     Button upDeltaButton = new Button(RIGHT_BUMPER_BUTTON);
     Button downDeltaButton = new Button(LEFT_BUMPER_BUTTON);
-    Button hatchButton = new Button(RESET_ELEVATOR_BUTTON);
+    Button resetButton = new Button(RESET_ELEVATOR_BUTTON);
     Button tiltButton = new Button(TILT_ELEVATOR_BUTTON);
+
 
     public ElevatorCommands() {
         // Use requires() here to declare subsystem dependencies eg. requires(chassis);
@@ -37,16 +38,29 @@ public class ElevatorCommands extends Command implements RobotMap {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         Joystick stick = OI.stick;
+        int direction = OI.stick.getPOV(0);
         // if(!(Robot.isTele))
         // return;
+        if(direction == 90){
+            Robot.hatchMode = true;
+            Robot.cargoMode = false;
+        } else if (direction == 270){
+            Robot.hatchMode = false;
+            Robot.cargoMode = true;
+        }
         double rightTriggerPressed = stick.getRawAxis(RIGHT_TRIGGER);
         double leftTriggerPressed = stick.getRawAxis(LEFT_TRIGGER);
-       if (hatchButton.isPressed())
-           setPoint = Elevator.CARGO_HATCH_HEIGHT;
-      //  else if (upDeltaButton.isPressed())
-         //   setPoint += Elevator.DELTA_TARGET_HEIGHT;
-       // else if (downDeltaButton.isPressed())
-          //  setPoint -= Elevator.DELTA_TARGET_HEIGHT;
+       if (resetButton.isPressed()){
+           if(Robot.hatchMode){
+           setPoint = Elevator.BASE_HATCH_HEIGHT;
+           } else{
+            setPoint = Elevator.MIN_HEIGHT;
+           }
+       }
+        else if (upDeltaButton.isPressed())
+           setPoint += Elevator.DELTA_TARGET_HEIGHT;
+        else if (downDeltaButton.isPressed())
+            setPoint -= Elevator.DELTA_TARGET_HEIGHT;
          if (rightTriggerPressed > 0)
             setPoint += Elevator.MOVE_RATE;
         else if (leftTriggerPressed > 0)

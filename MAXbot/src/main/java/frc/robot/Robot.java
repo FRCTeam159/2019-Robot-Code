@@ -72,7 +72,8 @@ public class Robot extends TimedRobot implements RobotMap {
   public static int imageWidth = 320;
   public static int imageHeight = 240;
   static int FPS = 30;
-
+  public static boolean hatchMode = true;
+  public static boolean cargoMode = false;
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.

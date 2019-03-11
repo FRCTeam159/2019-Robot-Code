@@ -89,6 +89,6 @@ public class InitElevator extends Command {
   }
 
   public void goToHatchHeight() {
-    Robot.elevator.setElevatorTarget(Elevator.CARGO_HATCH_HEIGHT);
+    Robot.elevator.setElevatorTarget(Elevator.BASE_HATCH_HEIGHT);
   }
 }

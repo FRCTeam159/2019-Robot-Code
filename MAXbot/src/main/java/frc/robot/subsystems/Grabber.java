@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.commands.GrabberCommands;
 
@@ -54,11 +55,19 @@ public class Grabber extends Subsystem implements RobotMap {
   }
 
   public void eject() {
-    grabberMotor.set(ControlMode.PercentOutput, ejectValue);
+    if (Robot.cargoMode) {
+      grabberMotor.set(ControlMode.PercentOutput, ejectValue);
+    } else {
+      grabberMotor.set(ControlMode.PercentOutput, grabValue);
+    }
   }
 
   public void grab() {
-    grabberMotor.set(ControlMode.PercentOutput, grabValue);
+    if (Robot.cargoMode) {
+      grabberMotor.set(ControlMode.PercentOutput, grabValue);
+    } else {
+      grabberMotor.set(ControlMode.PercentOutput, ejectValue);
+    }
   }
 
   public void hold() {
